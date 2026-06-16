@@ -1,0 +1,3836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万宁·活力文旅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A90B8;
+            --secondary-color: #7EC8E3;
+            --bg-color: #E8F4FA;
+            --text-dark: #2C5F7C;
+            --text-light: #5A8FA5;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        section {
+            min-height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(10, 110, 107, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Section 1: Hero */
+        #hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        #hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #hero p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .hero-nav {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .hero-nav a:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(10px); }
+            60% { transform: translateY(5px); }
+        }
+
+        .hero-edit-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        #hero:hover .hero-edit-btn, .hero-edit-btn:hover {
+            opacity: 1;
+        }
+
+        .hero-edit-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Section 2: Overview */
+        #overview {
+            padding: 4rem 2rem;
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('images/overview-bg.jpg') center/cover no-repeat;
+            text-align: center;
+        }
+
+        .overview-background {
+            display: none;
+        }
+
+        .overview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .overview-content {
+            padding: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .overview-text {
+            margin-top: 1.5rem;
+            line-height: 1.8;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .overview-text p {
+            text-align: center;
+        }
+
+        .overview-stats {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+        }
+
+        #overview .section-title,
+        #overview .section-subtitle {
+            color: white;
+        }
+
+        /* Section 3: Culture Decode */
+        #culture {
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .culture-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .culture-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .culture-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .culture-card .culture-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: none;
+        }
+
+        .culture-card.has-image .culture-image {
+            display: block;
+        }
+
+        .culture-card .culture-icon {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #e8f5f5, #d0ebeb);
+        }
+
+        .culture-card.has-image .culture-icon {
+            display: none;
+        }
+
+        .culture-card {
+            cursor: pointer;
+        }
+
+        .culture-card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #5ba3c5);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .culture-card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .culture-card-header .view-more {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .culture-card:hover .view-more {
+            opacity: 1;
+        }
+
+        .card-content-preview {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .card-content-preview p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin: 0;
+        }
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .culture-card summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .culture-card summary::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .culture-card[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        .culture-card .card-content {
+            padding: 1.5rem;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .culture-card .card-content p {
+            margin-bottom: 1rem;
+        }
+
+        .culture-card .card-content .source {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-style: italic;
+        }
+
+        .culture-card .culture-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+            gap: 5px;
+        }
+
+        .culture-card:hover .culture-actions {
+            display: flex;
+        }
+
+        .culture-card .btn-edit-culture, .culture-card .btn-delete-culture, .culture-card .btn-add-image {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transition: background 0.3s ease;
+        }
+
+        .culture-card .btn-edit-culture {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .culture-card .btn-add-image {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .culture-card .btn-delete-culture {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .add-culture-btn {
+            background: white;
+            border: 2px dashed var(--primary-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .add-culture-btn.visible {
+            display: block;
+        }
+
+        .add-culture-btn:hover {
+            background: rgba(10, 110, 107, 0.05);
+            border-color: var(--secondary-color);
+        }
+
+        .add-culture-btn span {
+            color: var(--primary-color);
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Section 3: Travel Diary */
+        #diary {
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, #fff 0%, var(--bg-color) 100%);
+        }
+
+        .diary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .diary-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .diary-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(74, 144, 184, 0.2);
+        }
+
+        .diary-card:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+
+        .diary-card .diary-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(74, 144, 184, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .diary-card:hover .diary-overlay {
+            opacity: 1;
+        }
+
+        .diary-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .diary-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .diary-card .diary-content {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .diary-card .diary-date {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .diary-card .diary-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .diary-card .diary-action {
+            display: flex;
+            justify-content: flex-end;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .diary-card:hover .diary-action {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-detail {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-detail:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(74, 144, 184, 0.4);
+        }
+
+        .btn-detail::after {
+            content: '→';
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        .diary-card:hover .btn-detail::after {
+            transform: translateX(3px);
+        }
+
+        /* Page Transition */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            z-index: 9999;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Section 4: Local Products */
+        #products {
+            padding: 4rem 2rem;
+        }
+
+        .products-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(74, 144, 184, 0.2);
+        }
+
+        .product-card:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+
+        .product-card .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(74, 144, 184, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .product-card:hover .product-overlay {
+            opacity: 1;
+        }
+
+        .product-card .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+
+        .product-card .product-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-top: 1rem;
+        }
+
+        .product-card .product-info {
+            padding: 1rem 1.5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .product-card .price {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .location {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.8rem;
+        }
+
+        .product-card .product-action {
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-action {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-detail-product {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-detail-product:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(74, 144, 184, 0.4);
+        }
+
+        .product-card .product-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .product-card:hover .product-actions {
+            display: flex;
+        }
+
+        .product-card .btn-edit-product, .product-card .btn-delete-product {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: background 0.3s ease;
+        }
+
+        .product-card .btn-edit-product {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .product-card .btn-edit-product:hover {
+            background: #e6892e;
+        }
+
+        .product-card .btn-delete-product {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .product-card .btn-delete-product:hover {
+            background: #c0392b;
+        }
+
+        .add-product-btn {
+            background: white;
+            border: 2px dashed var(--primary-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-product-btn:hover {
+            background: rgba(10, 110, 107, 0.05);
+            border-color: var(--secondary-color);
+        }
+
+        .add-product-btn span {
+            color: var(--primary-color);
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Section 5: Map */
+        #map-section {
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, var(--bg-color) 0%, #fff 100%);
+        }
+
+        .map-container {
+            max-width: 90%;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .map-container {
+            position: relative;
+            overflow: visible;
+        }
+
+        .map-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        #hotspotsContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-hotspot {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(249, 160, 63, 0.5);
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            min-width: 36px;
+            min-height: 36px;
+        }
+
+        .map-hotspot:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            background: #ff8c00;
+            z-index: 20;
+        }
+
+        .map-hotspot::after {
+            content: '📍';
+            font-size: 1.1rem;
+        }
+
+        .map-hotspot::before {
+            content: attr(data-name);
+            position: absolute;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        .map-hotspot:hover::before {
+            opacity: 1;
+        }
+
+        .map-hotspot.top-left::before {
+            top: 100%;
+            left: 50%;
+            margin-top: 8px;
+            transform: translateX(-50%);
+        }
+
+        .map-hotspot.top-right::before {
+            top: 100%;
+            right: 50%;
+            margin-top: 8px;
+            transform: translateX(50%);
+        }
+
+        .map-hotspot.bottom-left::before {
+            bottom: 100%;
+            left: 50%;
+            margin-bottom: 8px;
+            transform: translateX(-50%);
+        }
+
+        .map-hotspot.bottom-right::before {
+            bottom: 100%;
+            right: 50%;
+            margin-bottom: 8px;
+            transform: translateX(50%);
+        }
+
+        .map-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: #085c5a;
+        }
+
+        .spot-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .map-modal {
+            max-width: 500px;
+        }
+
+        .map-edit-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            z-index: 10;
+        }
+
+        .map-edit-btn:hover {
+            background: #ff8c00;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            animation: modalIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #eee;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #ddd;
+        }
+
+        .modal-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content .tip {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Image Preview */
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview.has-image {
+            border-style: solid;
+            border-color: var(--primary-color);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .image-preview.has-image img {
+            display: block;
+        }
+
+        .image-preview .placeholder {
+            text-align: center;
+            color: #999;
+        }
+
+        .image-preview.has-image .placeholder {
+            display: none;
+        }
+
+        .remove-preview {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: none;
+        }
+
+        .image-preview.has-image .remove-preview {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input[type="file"] {
+            padding: 0.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .btn-save, .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-save {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #085c5a;
+        }
+
+        .btn-cancel {
+            background: #eee;
+            color: var(--text-dark);
+        }
+
+        .btn-cancel:hover {
+            background: #ddd;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        /* Manager Panel */
+        .manager-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 900;
+        }
+
+        .manager-header.active {
+            display: flex;
+        }
+
+        .manager-btn {
+            background: var(--secondary-color);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .manager-btn:hover {
+            background: #e6892e;
+        }
+
+        .manager-panel {
+            display: none;
+            position: fixed;
+            right: 0;
+            top: 60px;
+            bottom: 0;
+            width: 400px;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 800;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        .manager-panel.active {
+            display: flex;
+        }
+
+        .manager-panel h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .manager-panel .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .manager-panel label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .manager-panel input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .manager-panel textarea {
+            width: 100%;
+            height: 120px;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .manager-panel .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .manager-panel .btn-save, .manager-panel .btn-cancel {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .manager-panel .btn-save {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .manager-panel .btn-save:hover {
+            background: #085c5a;
+        }
+
+        .manager-panel .btn-cancel {
+            background: #eee;
+            color: var(--text-dark);
+        }
+
+        .manager-panel .btn-cancel:hover {
+            background: #ddd;
+        }
+
+        .panel-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--secondary-color);
+        }
+
+        .tab-btn:hover {
+            opacity: 0.9;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Links List Styles */
+        .links-list {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .links-list h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: var(--bg-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            background: rgba(74, 144, 184, 0.1);
+        }
+
+        .link-item .link-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .link-item .link-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .link-item .link-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+
+        .link-item .link-url {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .link-item .link-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .link-item .link-actions button {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .link-item .btn-edit-link {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .link-item .btn-edit-link:hover {
+            background: #e6892e;
+        }
+
+        .link-item .btn-delete-link {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .link-item .btn-delete-link:hover {
+            background: #c0392b;
+        }
+
+        .link-item .btn-up, .link-item .btn-down {
+            background: var(--primary-color);
+            color: white;
+            font-size: 0.6rem;
+        }
+
+        .links-empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .image-preview-small {
+            width: 100%;
+            height: 120px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .image-preview-small .placeholder {
+            text-align: center;
+            color: #999;
+        }
+
+        .image-preview-small.has-image .placeholder {
+            display: none;
+        }
+
+        .image-preview-small img {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview-small.has-image img {
+            display: block;
+        }
+
+        .btn-save-small {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-save-small:hover {
+            background: #085c5a;
+        }
+
+        .manager-panel select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .records-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .record-item {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .record-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .record-item .record-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .record-item .record-date {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+
+        .record-item .record-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .record-item .btn-edit, .record-item .btn-delete {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: background 0.3s ease;
+        }
+
+        .record-item .btn-edit {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .record-item .btn-edit:hover {
+            background: #e6892e;
+        }
+
+        .record-item .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .record-item .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+            padding: 20px;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .login-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .login-content input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .login-content .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .login-content .btn-login:hover {
+            background: #085c5a;
+        }
+
+        .login-content .error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .login-content .error.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #hero h1 {
+                font-size: 2.5rem;
+            }
+
+            #hero p {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .manager-panel {
+                width: 100%;
+                bottom: 0;
+                top: auto;
+                height: 70vh;
+                border-radius: 20px 20px 0 0;
+            }
+
+            .map-hotspot {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-dots {
+                right: 10px;
+            }
+
+            .nav-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .hero-nav {
+                gap: 10px;
+            }
+
+            .hero-nav a {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+        <div class="nav-dot active" data-section="hero"></div>
+        <div class="nav-dot" data-section="overview"></div>
+        <div class="nav-dot" data-section="culture"></div>
+        <div class="nav-dot" data-section="diary"></div>
+        <div class="nav-dot" data-section="products"></div>
+        <div class="nav-dot" data-section="map-section"></div>
+    </div>
+
+    <!-- Manager Header -->
+    <div class="manager-header" id="managerHeader">
+        <span>管理者模式已激活</span>
+        <button class="manager-btn" id="managerBtn">管理面板</button>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <h3>管理者登录</h3>
+            <input type="password" id="accessCode" placeholder="请输入访问码">
+            <button class="btn-login" id="loginBtn">登录</button>
+            <div class="error" id="loginError">访问码错误，请重试</div>
+        </div>
+    </div>
+
+    <!-- Manager Panel -->
+    <div class="manager-panel" id="managerPanel">
+        <div class="panel-tabs">
+            <button class="tab-btn active" data-tab="diary">探访实录</button>
+            <button class="tab-btn" data-tab="hero">印象首页</button>
+            <button class="tab-btn" data-tab="overview">万宁概览</button>
+            <button class="tab-btn" data-tab="culture">文化解码</button>
+            <button class="tab-btn" data-tab="products">风物档案</button>
+            <button class="tab-btn" data-tab="map">互动地图</button>
+            <button class="tab-btn" data-tab="links">跳转链接</button>
+        </div>
+        
+        <!-- Diary Tab -->
+        <div class="tab-content active" id="tabDiary">
+            <h3>探访实录管理</h3>
+            <div class="form-group">
+                <label>上传图片</label>
+                <input type="file" id="imageUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="form-group">
+                <label>见闻内容（200字以上）</label>
+                <textarea id="diaryText" placeholder="请输入您的探访见闻..."></textarea>
+            </div>
+        </div>
+        
+        <!-- Hero Tab -->
+        <div class="tab-content" id="tabHero">
+            <h3>印象首页管理</h3>
+            <div class="form-group">
+                <label>上传首页背景图片</label>
+                <input type="file" id="heroPanelUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview-small" id="heroPanelPreview">
+                <div class="placeholder">
+                    <span>🖼️</span>
+                    <p>预览</p>
+                </div>
+                <img id="heroPanelImg" src="" alt="预览">
+            </div>
+            <button class="btn-save-small" id="saveHeroPanelBtn">保存背景</button>
+        </div>
+        
+        <!-- Overview Tab -->
+        <div class="tab-content" id="tabOverview">
+            <h3>万宁概览管理</h3>
+            <div class="form-group">
+                <label>标题</label>
+                <input type="text" id="overviewTitleInput" placeholder="输入标题">
+            </div>
+            <div class="form-group">
+                <label>副标题</label>
+                <input type="text" id="overviewSubtitleInput" placeholder="输入副标题">
+            </div>
+            <div class="form-group">
+                <label>介绍内容</label>
+                <textarea id="overviewContentInput" placeholder="输入介绍内容..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>上传图片</label>
+                <input type="file" id="overviewPanelUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview-small" id="overviewPanelPreview">
+                <div class="placeholder">
+                    <span>🖼️</span>
+                    <p>预览</p>
+                </div>
+                <img id="overviewPanelImg" src="" alt="预览">
+            </div>
+            <button class="btn-save-small" id="saveOverviewPanelBtn">保存概览</button>
+        </div>
+        
+        <!-- Culture Tab -->
+        <div class="tab-content" id="tabCulture">
+            <h3>文化解码管理</h3>
+            <div class="form-group">
+                <label>选择项目</label>
+                <select id="culturePanelSelector"></select>
+            </div>
+            <div class="form-group">
+                <label>上传图片</label>
+                <input type="file" id="culturePanelUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview-small" id="culturePanelPreview">
+                <div class="placeholder">
+                    <span>🖼️</span>
+                    <p>预览</p>
+                </div>
+                <img id="culturePanelImg" src="" alt="预览">
+            </div>
+            <button class="btn-save-small" id="saveCulturePanelBtn">保存图片</button>
+        </div>
+        
+        <!-- Products Tab -->
+        <div class="tab-content" id="tabProducts">
+            <h3>风物档案管理</h3>
+            <div class="form-group">
+                <label>选择风物</label>
+                <select id="productPanelSelector"></select>
+            </div>
+            <div class="form-group">
+                <label>上传图片</label>
+                <input type="file" id="productPanelUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview-small" id="productPanelPreview">
+                <div class="placeholder">
+                    <span>🖼️</span>
+                    <p>预览</p>
+                </div>
+                <img id="productPanelImg" src="" alt="预览">
+            </div>
+            <button class="btn-save-small" id="saveProductPanelBtn">保存图片</button>
+        </div>
+        
+        <!-- Map Tab -->
+        <div class="tab-content" id="tabMap">
+            <h3>互动地图管理</h3>
+            <div class="form-group">
+                <label>上传地图底图</label>
+                <input type="file" id="mapPanelUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview-small" id="mapPanelPreview">
+                <div class="placeholder">
+                    <span>🗺️</span>
+                    <p>预览</p>
+                </div>
+                <img id="mapPanelImg" src="" alt="预览">
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label>选择景点上传图片</label>
+                <select id="spotPanelSelector">
+                    <option value="shimeiwan">石梅湾</option>
+                    <option value="riyuewan">日月湾</option>
+                    <option value="xinglong">兴隆植物园</option>
+                    <option value="dongshanling">东山岭</option>
+                </select>
+                <input type="file" id="spotPanelUpload" accept="image/jpeg,image/png,image/webp" style="margin-top: 10px;">
+            </div>
+            <button class="btn-save-small" id="saveMapPanelBtn">保存设置</button>
+        </div>
+        
+        <!-- Links Tab -->
+        <div class="tab-content" id="tabLinks">
+            <h3>跳转链接管理</h3>
+            <div class="form-group">
+                <label>链接标题</label>
+                <input type="text" id="linkTitleInput" placeholder="输入链接标题">
+            </div>
+            <div class="form-group">
+                <label>链接描述</label>
+                <textarea id="linkDescInput" placeholder="输入链接描述..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>目标URL</label>
+                <input type="text" id="linkUrlInput" placeholder="输入目标URL">
+            </div>
+            <div class="form-group">
+                <label>链接图标</label>
+                <input type="text" id="linkIconInput" placeholder="输入emoji图标（如 🔗）">
+            </div>
+            <div class="form-group">
+                <label>排序序号</label>
+                <input type="number" id="linkOrderInput" placeholder="输入排序序号" value="1">
+            </div>
+            <div class="form-group">
+                <label>关联板块</label>
+                <select id="linkSectionInput">
+                    <option value="culture">文化解码</option>
+                    <option value="diary">探访实录</option>
+                    <option value="products">风物档案</option>
+                    <option value="map">互动地图</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>上传缩略图</label>
+                <input type="file" id="linkImageUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview-small" id="linkImagePreview">
+                <div class="placeholder">
+                    <span>🖼️</span>
+                    <p>预览</p>
+                </div>
+                <img id="linkImageImg" src="" alt="预览">
+            </div>
+            <div class="btn-group" style="margin-bottom: 20px;">
+                <button class="btn-save-small" id="addLinkBtn">添加链接</button>
+                <button class="btn-save-small" id="updateLinkBtn" style="display: none;">更新链接</button>
+            </div>
+            
+            <!-- Links List -->
+            <div class="links-list" id="linksList">
+                <h4>已添加的链接</h4>
+                <div id="linksContainer"></div>
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-save" id="saveBtn">保存记录</button>
+            <button class="btn-cancel" id="cancelBtn">取消</button>
+        </div>
+        <div class="records-list" id="recordsList"></div>
+    </div>
+
+    <!-- Hero Background Modal -->
+    <div class="modal-overlay" id="heroModal">
+        <div class="modal-content">
+            <button class="modal-close" id="heroModalClose">×</button>
+            <h3>设置首页背景图片</h3>
+            <div class="form-group">
+                <label>上传背景图片</label>
+                <input type="file" id="heroImageUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview" id="heroImagePreview">
+                <div class="placeholder">
+                    <span style="font-size: 3rem;">🖼️</span>
+                    <p>图片预览区域</p>
+                </div>
+                <img id="heroPreviewImg" src="" alt="预览">
+                <button class="remove-preview" id="removeHeroPreview">×</button>
+            </div>
+            <div class="error-message" id="heroError">仅支持 JPG、PNG、WEBP 格式，文件大小不超过 5MB</div>
+            <div class="btn-group">
+                <button class="btn-save" id="saveHeroBtn">保存背景</button>
+                <button class="btn-cancel" id="cancelHeroBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Culture Modal -->
+    <div class="modal-overlay" id="cultureModal">
+        <div class="modal-content">
+            <button class="modal-close" id="cultureModalClose">×</button>
+            <h3 id="cultureModalTitle">添加文化解码</h3>
+            <div class="form-group">
+                <label>标题</label>
+                <input type="text" id="cultureTitle" placeholder="输入标题">
+            </div>
+            <div class="form-group">
+                <label>内容</label>
+                <textarea id="cultureContent" placeholder="输入详细内容..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>来源</label>
+                <input type="text" id="cultureSource" placeholder="输入来源">
+            </div>
+            <div class="form-group">
+                <label>上传图片</label>
+                <input type="file" id="cultureImageUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview" id="cultureImagePreview">
+                <div class="placeholder">
+                    <span style="font-size: 3rem;">🖼️</span>
+                    <p>图片预览区域</p>
+                </div>
+                <img id="culturePreviewImg" src="" alt="预览">
+                <button class="remove-preview" id="removeCulturePreview">×</button>
+            </div>
+            <div class="error-message" id="cultureError">请填写完整信息</div>
+            <div class="btn-group">
+                <button class="btn-save" id="saveCultureBtn">保存</button>
+                <button class="btn-cancel" id="cancelCultureBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" id="productModalClose">×</button>
+            <h3 id="productModalTitle">添加风物</h3>
+            <div class="form-group">
+                <label>名称</label>
+                <input type="text" id="productName" placeholder="输入风物名称">
+            </div>
+            <div class="form-group">
+                <label>价格</label>
+                <input type="text" id="productPrice" placeholder="输入价格">
+            </div>
+            <div class="form-group">
+                <label>推荐地点</label>
+                <input type="text" id="productLocation" placeholder="输入推荐地点">
+            </div>
+            <div class="form-group">
+                <label>上传图片</label>
+                <input type="file" id="productImageUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="btn-group">
+                <button class="btn-save" id="saveProductBtn">保存</button>
+                <button class="btn-cancel" id="cancelProductBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Hero -->
+    <section id="hero">
+        <button class="hero-edit-btn" id="heroEditBtn" style="display: none;">📷</button>
+        <h1>万宁 · 冲浪之都</h1>
+        <p>在北纬18°的浪尖上跳舞</p>
+        <div class="hero-nav">
+            <a href="#overview">万宁概览</a>
+            <a href="#culture">文化解码</a>
+            <a href="#diary">探访实录</a>
+            <a href="#products">风物档案</a>
+            <a href="#map-section">互动地图</a>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 16l5-5 5 5M7 8l5-5 5 5"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Section 2: Overview -->
+    <section id="overview">
+        <div class="overview-background" id="overviewBackground">
+            <img src="images/overview-bg.jpg" alt="万宁概览" class="overview-bg-img">
+        </div>
+        <div class="overview-container">
+            <div class="overview-content">
+                <h2 class="section-title" id="overviewTitle">万宁概览</h2>
+                <p class="section-subtitle" id="overviewSubtitle">走进这座充满活力的滨海城市</p>
+                <div class="overview-text" id="overviewText">
+                    <p>万宁市位于海南岛东南部，是一座集自然风光与人文风情于一体的滨海旅游城市。这里拥有美丽的海滩、丰富的热带植物、独特的侨乡文化，以及享誉全国的冲浪运动。</p>
+                    <p>万宁地处北纬18°黄金纬度带，气候宜人，四季如春。这里不仅有石梅湾、日月湾等美丽海湾，还有兴隆热带植物园、东山岭等著名景点，是旅游度假的理想目的地。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Culture Decode -->
+    <section id="culture">
+        <h2 class="section-title">文化解码</h2>
+        <p class="section-subtitle">探索万宁深厚的历史文化底蕴</p>
+        <div class="culture-cards" id="cultureCards">
+            <!-- Culture items will be loaded from localStorage -->
+        </div>
+    </section>
+
+    <!-- Section 3: Travel Diary -->
+    <section id="diary">
+        <h2 class="section-title">探访实录</h2>
+        <p class="section-subtitle">记录旅途中的美好瞬间与独特见闻</p>
+        <div class="diary-grid" id="diaryGrid">
+            <!-- Diary items will be loaded from localStorage -->
+        </div>
+    </section>
+
+    <!-- Section 4: Local Products -->
+    <section id="products">
+        <h2 class="section-title">风物档案</h2>
+        <p class="section-subtitle">品味万宁特色美食与手工艺品</p>
+        <div class="products-container">
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded from localStorage -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Interactive Map -->
+    <section id="map-section">
+        <h2 class="section-title">互动地图</h2>
+        <p class="section-subtitle">探索万宁四大经典旅游点位</p>
+        <button class="map-edit-btn" id="mapEditBtn" style="display: none;">🗺️ 编辑地图</button>
+        <div class="map-container">
+            <img id="mapBaseImage" src="images/map-base.jpg" alt="万宁地图" class="map-image">
+            <div id="hotspotsContainer">
+                <div class="map-hotspot" style="top: 35%; left: 72%;" data-spot="shimeiwan" data-name="石梅湾">
+                </div>
+                <div class="map-hotspot" style="top: 28%; left: 68%;" data-spot="riyuewan" data-name="日月湾">
+                </div>
+                <div class="map-hotspot" style="top: 52%; left: 62%;" data-spot="xinglong" data-name="兴隆植物园">
+                </div>
+                <div class="map-hotspot" style="top: 68%; left: 52%;" data-spot="dongshanling" data-name="东山岭">
+                </div>
+            </div>
+        </div>
+        <div class="map-controls">
+            <button class="zoom-btn" id="zoomIn">🔍+</button>
+            <button class="zoom-btn" id="zoomOut">🔍-</button>
+            <button class="zoom-btn" id="resetZoom">↺</button>
+        </div>
+    </section>
+
+    <!-- Map Modal -->
+    <div class="modal-overlay" id="mapModal">
+        <div class="modal-content map-modal">
+            <button class="modal-close" id="modalClose">×</button>
+            <img id="spotImage" src="" alt="景点图片" class="spot-image">
+            <h3 id="spotName">点位名称</h3>
+            <p id="spotDesc">点位介绍</p>
+            <div class="tip" id="spotTip">小贴士</div>
+        </div>
+    </div>
+
+    <!-- Map Edit Modal -->
+    <div class="modal-overlay" id="mapEditModal">
+        <div class="modal-content">
+            <button class="modal-close" id="mapEditModalClose">×</button>
+            <h3>编辑互动地图</h3>
+            <div class="form-group">
+                <label>上传地图底图</label>
+                <input type="file" id="mapImageUpload" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="image-preview" id="mapImagePreview">
+                <div class="placeholder">
+                    <span style="font-size: 3rem;">🗺️</span>
+                    <p>地图图片预览</p>
+                </div>
+                <img id="mapPreviewImg" src="" alt="预览">
+                <button class="remove-preview" id="removeMapPreview">×</button>
+            </div>
+            <div class="form-group">
+                <label>管理景点图片</label>
+                <select id="spotSelector">
+                    <option value="shimeiwan">石梅湾</option>
+                    <option value="riyuewan">日月湾</option>
+                    <option value="xinglong">兴隆植物园</option>
+                    <option value="dongshanling">东山岭</option>
+                </select>
+                <input type="file" id="spotImageUpload" accept="image/jpeg,image/png,image/webp" style="margin-top: 10px;">
+            </div>
+            <div class="btn-group">
+                <button class="btn-save" id="saveMapBtn">保存设置</button>
+                <button class="btn-cancel" id="cancelMapBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation dots
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = document.querySelectorAll('section');
+
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const sectionId = dot.dataset.section;
+                document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                if (scrollY >= sectionTop - 100 && scrollY < sectionTop + sectionHeight - 100) {
+                    currentSection = section.id;
+                }
+            });
+            navDots.forEach(dot => {
+                dot.classList.toggle('active', dot.dataset.section === currentSection);
+            });
+        });
+
+        // Map hotspots data
+        const spotData = {
+            shimeiwan: {
+                name: '石梅湾',
+                desc: '海南最美海湾之一，长达6公里的银滩，是冲浪和发呆的绝佳去处。这里海水清澈，沙滩细腻，周边有青皮林自然保护区，生态环境极佳。',
+                tip: '推荐：早上来看日出，傍晚在沙滩散步看夕阳',
+                image: 'images/shimeiwan-detail.jpg'
+            },
+            riyuewan: {
+                name: '日月湾',
+                desc: '国内顶级冲浪胜地，每年举办多项国际冲浪赛事，是年轻人的浪人部落。这里聚集了众多冲浪俱乐部和民宿，充满活力与激情。',
+                tip: '推荐：参加冲浪课程，感受海浪的魅力',
+                image: 'images/riyuewan-detail.jpg'
+            },
+            xinglong: {
+                name: '兴隆热带植物园',
+                desc: '热带植物王国，可体验兴隆咖啡和巧克力制作，充满南洋风情。园内有各种珍稀热带植物，是亲子游的好去处。',
+                tip: '推荐：品尝现磨兴隆咖啡，参观咖啡加工厂',
+                image: 'images/xinglong-detail.jpg'
+            },
+            dongshanling: {
+                name: '东山岭',
+                desc: '"海南第一山"，奇石嶙峋，摩崖石刻众多，登顶可俯瞰万宁全景。山上有著名的潮音寺，是海南著名的佛教圣地。',
+                tip: '推荐：清晨登山，空气清新，人少安静',
+                image: 'images/dongshanling-detail.jpg'
+            }
+        };
+
+        // Map hotspot clicks
+        const hotspots = document.querySelectorAll('.map-hotspot');
+        const mapModal = document.getElementById('mapModal');
+        const modalClose = document.getElementById('modalClose');
+        const spotImage = document.getElementById('spotImage');
+        const spotName = document.getElementById('spotName');
+        const spotDesc = document.getElementById('spotDesc');
+        const spotTip = document.getElementById('spotTip');
+
+        hotspots.forEach(hotspot => {
+            hotspot.addEventListener('click', () => {
+                const spot = hotspot.dataset.spot;
+                const data = spotData[spot];
+                spotImage.src = data.image;
+                spotName.textContent = data.name;
+                spotDesc.textContent = data.desc;
+                spotTip.textContent = data.tip;
+                mapModal.classList.add('active');
+            });
+        });
+
+        modalClose.addEventListener('click', () => {
+            mapModal.classList.remove('active');
+        });
+
+        mapModal.addEventListener('click', (e) => {
+            if (e.target === mapModal) {
+                mapModal.classList.remove('active');
+            }
+        });
+
+        // Map zoom controls
+        const mapContainer = document.querySelector('.map-container');
+        const zoomIn = document.getElementById('zoomIn');
+        const zoomOut = document.getElementById('zoomOut');
+        const resetZoom = document.getElementById('resetZoom');
+        let zoomLevel = 1;
+
+        zoomIn.addEventListener('click', () => {
+            zoomLevel += 0.1;
+            updateMapZoom();
+        });
+
+        zoomOut.addEventListener('click', () => {
+            zoomLevel = Math.max(0.5, zoomLevel - 0.1);
+            updateMapZoom();
+        });
+
+        resetZoom.addEventListener('click', () => {
+            zoomLevel = 1;
+            updateMapZoom();
+        });
+
+        function updateMapZoom() {
+            mapContainer.style.transform = `scale(${zoomLevel})`;
+            mapContainer.style.transformOrigin = 'center center';
+        }
+
+        // Hotspot Position Optimization
+        function optimizeHotspotPositions() {
+            const hotspots = document.querySelectorAll('.map-hotspot');
+            const containerRect = mapContainer.getBoundingClientRect();
+            const hotspotSize = 36; // Size of each hotspot
+            const labelOffset = 40; // Space needed for label
+            const margin = 15; // Minimum margin from edge
+
+            hotspots.forEach(hotspot => {
+                // Get current position
+                const topPercent = parseFloat(hotspot.style.top);
+                const leftPercent = parseFloat(hotspot.style.left);
+
+                // Calculate actual position in pixels
+                const topPixel = (topPercent / 100) * containerRect.height;
+                const leftPixel = (leftPercent / 100) * containerRect.width;
+
+                // Determine quadrant based on position
+                const isTop = topPixel < containerRect.height / 2;
+                const isLeft = leftPixel < containerRect.width / 2;
+
+                // Clear previous position classes
+                hotspot.classList.remove('top-left', 'top-right', 'bottom-left', 'bottom-right');
+
+                // Add appropriate position class for tooltip direction
+                if (isTop && isLeft) {
+                    hotspot.classList.add('top-left');
+                } else if (isTop && !isLeft) {
+                    hotspot.classList.add('top-right');
+                } else if (!isTop && isLeft) {
+                    hotspot.classList.add('bottom-left');
+                } else {
+                    hotspot.classList.add('bottom-right');
+                }
+
+                // Validate and adjust position if near edge
+                let adjustedTop = topPercent;
+                let adjustedLeft = leftPercent;
+
+                // Check top boundary
+                if (topPixel < margin + hotspotSize / 2) {
+                    adjustedTop = ((margin + hotspotSize / 2) / containerRect.height) * 100;
+                }
+                // Check bottom boundary
+                if (topPixel > containerRect.height - margin - hotspotSize / 2) {
+                    adjustedTop = ((containerRect.height - margin - hotspotSize / 2) / containerRect.height) * 100;
+                }
+                // Check left boundary
+                if (leftPixel < margin + hotspotSize / 2) {
+                    adjustedLeft = ((margin + hotspotSize / 2) / containerRect.width) * 100;
+                }
+                // Check right boundary
+                if (leftPixel > containerRect.width - margin - hotspotSize / 2) {
+                    adjustedLeft = ((containerRect.width - margin - hotspotSize / 2) / containerRect.width) * 100;
+                }
+
+                // Apply adjusted position if needed
+                if (adjustedTop !== topPercent || adjustedLeft !== leftPercent) {
+                    hotspot.style.top = adjustedTop.toFixed(1) + '%';
+                    hotspot.style.left = adjustedLeft.toFixed(1) + '%';
+                }
+            });
+        }
+
+        // Run optimization on page load and resize
+        document.addEventListener('DOMContentLoaded', optimizeHotspotPositions);
+        window.addEventListener('resize', optimizeHotspotPositions);
+
+        // Smooth scroll into view when hotspot is clicked
+        document.querySelectorAll('.map-hotspot').forEach(hotspot => {
+            hotspot.addEventListener('click', () => {
+                const mapSection = document.getElementById('map-section');
+                mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+
+        // Map Edit Management
+        const MAP_KEY = 'wanning_map_bg';
+        const SPOT_IMAGES_KEY = 'wanning_spot_images';
+
+        function getMapBackground() {
+            return localStorage.getItem(MAP_KEY) || '';
+        }
+
+        function saveMapBackground(imageData) {
+            localStorage.setItem(MAP_KEY, imageData);
+        }
+
+        function applyMapBackground() {
+            const bg = getMapBackground();
+            if (bg) {
+                document.getElementById('mapBaseImage').src = bg;
+            }
+        }
+
+        function getSpotImages() {
+            const data = localStorage.getItem(SPOT_IMAGES_KEY);
+            return data ? JSON.parse(data) : {};
+        }
+
+        function saveSpotImages(images) {
+            localStorage.setItem(SPOT_IMAGES_KEY, JSON.stringify(images));
+        }
+
+        function updateSpotImage(spotId, imageData) {
+            const images = getSpotImages();
+            images[spotId] = imageData;
+            saveSpotImages(images);
+            spotData[spotId].image = imageData;
+        }
+
+        // Map Edit Modal
+        const mapEditBtn = document.getElementById('mapEditBtn');
+        const mapEditModal = document.getElementById('mapEditModal');
+        const mapEditModalClose = document.getElementById('mapEditModalClose');
+        const mapImageUpload = document.getElementById('mapImageUpload');
+        const mapImagePreview = document.getElementById('mapImagePreview');
+        const mapPreviewImg = document.getElementById('mapPreviewImg');
+        const removeMapPreview = document.getElementById('removeMapPreview');
+        const spotSelector = document.getElementById('spotSelector');
+        const spotImageUpload = document.getElementById('spotImageUpload');
+        const saveMapBtn = document.getElementById('saveMapBtn');
+        const cancelMapBtn = document.getElementById('cancelMapBtn');
+
+        let currentMapImage = '';
+        let currentSpotImages = {};
+
+        mapEditBtn.addEventListener('click', () => {
+            currentMapImage = getMapBackground();
+            currentSpotImages = getSpotImages();
+            if (currentMapImage) {
+                mapPreviewImg.src = currentMapImage;
+                mapImagePreview.classList.add('has-image');
+            } else {
+                mapImagePreview.classList.remove('has-image');
+            }
+            mapEditModal.classList.add('active');
+        });
+
+        mapEditModalClose.addEventListener('click', () => {
+            mapEditModal.classList.remove('active');
+        });
+
+        cancelMapBtn.addEventListener('click', () => {
+            mapEditModal.classList.remove('active');
+        });
+
+        mapEditModal.addEventListener('click', (e) => {
+            if (e.target === mapEditModal) {
+                mapEditModal.classList.remove('active');
+            }
+        });
+
+        mapImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentMapImage = e.target.result;
+                    mapPreviewImg.src = e.target.result;
+                    mapImagePreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeMapPreview.addEventListener('click', () => {
+            currentMapImage = '';
+            mapImagePreview.classList.remove('has-image');
+            mapPreviewImg.src = '';
+        });
+
+        spotImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const spotId = spotSelector.value;
+                    currentSpotImages[spotId] = e.target.result;
+                    updateSpotImage(spotId, e.target.result);
+                    alert('景点图片已更新！');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveMapBtn.addEventListener('click', () => {
+            if (currentMapImage) {
+                saveMapBackground(currentMapImage);
+                applyMapBackground();
+            }
+            if (Object.keys(currentSpotImages).length > 0) {
+                saveSpotImages(currentSpotImages);
+            }
+            mapEditModal.classList.remove('active');
+            alert('地图设置已保存！');
+        });
+
+        // Apply saved map background on load
+        applyMapBackground();
+
+        // Load saved spot images
+        const savedSpotImages = getSpotImages();
+        for (const spotId in savedSpotImages) {
+            if (spotData[spotId]) {
+                spotData[spotId].image = savedSpotImages[spotId];
+            }
+        }
+
+        // Hero Background Management
+        const HERO_KEY = 'wanning_hero_bg';
+
+        function getHeroBackground() {
+            return localStorage.getItem(HERO_KEY) || '';
+        }
+
+        function saveHeroBackground(imageData) {
+            localStorage.setItem(HERO_KEY, imageData);
+        }
+
+        function applyHeroBackground() {
+            const bg = getHeroBackground();
+            if (bg) {
+                document.getElementById('hero').style.background = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${bg})`;
+                document.getElementById('hero').style.backgroundSize = 'cover';
+                document.getElementById('hero').style.backgroundPosition = 'center';
+            }
+        }
+
+        // Validate image file
+        function validateImage(file) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            
+            if (!validTypes.includes(file.type)) {
+                return { valid: false, message: '仅支持 JPG、PNG、WEBP 格式' };
+            }
+            
+            if (file.size > maxSize) {
+                return { valid: false, message: '文件大小不能超过 5MB' };
+            }
+            
+            return { valid: true, message: '' };
+        }
+
+        // Hero Image Upload
+        const heroImageUpload = document.getElementById('heroImageUpload');
+        const heroImagePreview = document.getElementById('heroImagePreview');
+        const heroPreviewImg = document.getElementById('heroPreviewImg');
+        const removeHeroPreview = document.getElementById('removeHeroPreview');
+        const heroError = document.getElementById('heroError');
+
+        heroImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    heroError.textContent = validation.message;
+                    heroError.classList.add('active');
+                    return;
+                }
+                heroError.classList.remove('active');
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    heroPreviewImg.src = e.target.result;
+                    heroImagePreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeHeroPreview.addEventListener('click', () => {
+            heroImagePreview.classList.remove('has-image');
+            heroPreviewImg.src = '';
+            heroImageUpload.value = '';
+        });
+
+        document.getElementById('saveHeroBtn').addEventListener('click', () => {
+            if (!heroImagePreview.classList.contains('has-image')) {
+                heroError.textContent = '请先选择图片';
+                heroError.classList.add('active');
+                return;
+            }
+            
+            saveHeroBackground(heroPreviewImg.src);
+            applyHeroBackground();
+            document.getElementById('heroModal').classList.remove('active');
+            alert('首页背景图片已更新');
+        });
+
+        document.getElementById('cancelHeroBtn').addEventListener('click', () => {
+            document.getElementById('heroModal').classList.remove('active');
+            heroImagePreview.classList.remove('has-image');
+            heroPreviewImg.src = '';
+            heroImageUpload.value = '';
+            heroError.classList.remove('active');
+        });
+
+        document.getElementById('heroModalClose').addEventListener('click', () => {
+            document.getElementById('heroModal').classList.remove('active');
+        });
+
+        // Culture Management
+        const CULTURE_KEY = 'wanning_culture';
+        let editingCultureId = null;
+
+        function getCultureItems() {
+            const items = localStorage.getItem(CULTURE_KEY);
+            return items ? JSON.parse(items) : getDefaultCultureItems();
+        }
+
+        function getDefaultCultureItems() {
+            return [
+                {
+                    id: 1,
+                    title: '历史渊源',
+                    content: '万宁市历史悠久，早在新石器时代就有人类活动。自唐代贞观五年（公元631年）设县，至今已有近1400年历史。万宁古称"万州"，是海南历史上的重要州府之一，留下了丰富的历史遗迹和人文景观。这里是著名的"侨乡"，大量华侨从这里走向世界，带回了南洋文化，形成了独特的侨乡文化风貌。兴隆华侨农场就是这段历史的生动见证。',
+                    source: '参考来源：万宁市人民政府官网',
+                    image: ''
+                },
+                {
+                    id: 2,
+                    title: '非遗项目',
+                    content: '万宁市拥有多项省级非物质文化遗产，其中最具代表性的是"万宁龙滚军坡节"和"兴隆咖啡制作技艺"。军坡节是海南特有的民俗节日，源于冼夫人文化，每年农历二月初二至三月初三举行，是一场融合祭祀、表演、商贸的盛大活动。兴隆咖啡制作技艺则传承了东南亚咖啡烘焙工艺，香气浓郁，独具风味。',
+                    source: '参考来源：海南省非物质文化遗产保护中心',
+                    image: ''
+                },
+                {
+                    id: 3,
+                    title: '节庆活动',
+                    content: '万宁每年举办多项重大节庆活动，其中最著名的是"万宁国际冲浪节"，自2010年起每年举办，吸引了全球顶尖冲浪选手参与，成为亚洲最具影响力的冲浪赛事之一。此外，还有"兴隆咖啡文化节"、"东山岭登山节"、"和乐蟹美食节"等特色活动，展现了万宁独特的旅游魅力。',
+                    source: '参考来源：万宁市旅游和文化广电体育局',
+                    image: ''
+                }
+            ];
+        }
+
+        function saveCultureItems(items) {
+            localStorage.setItem(CULTURE_KEY, JSON.stringify(items));
+        }
+
+        function renderCultureCards() {
+            const container = document.getElementById('cultureCards');
+            const items = getCultureItems();
+            const isManager = localStorage.getItem('wanning_manager_active') === 'true';
+            
+            let html = items.map(item => `
+                <div class="culture-card ${item.image ? 'has-image' : ''}" onclick="goToCultureDetail(${item.id})">
+                    ${item.image ? `<img src="${item.image}" alt="${item.title}" class="culture-image">` : `<div class="culture-icon">📚</div>`}
+                    ${isManager ? `
+                        <div class="culture-actions" onclick="event.stopPropagation()">
+                            <button class="btn-edit-culture" onclick="editCulture(${item.id})">✏️</button>
+                            <button class="btn-add-image" onclick="addCultureImage(${item.id})">📷</button>
+                            <button class="btn-delete-culture" onclick="deleteCulture(${item.id})">🗑️</button>
+                        </div>
+                    ` : ''}
+                    <div class="culture-card-header">
+                        <h3>${item.title}</h3>
+                        <span class="view-more">查看详情 →</span>
+                    </div>
+                    <div class="card-content-preview">
+                        <p>${item.content.substring(0, 100)}...</p>
+                    </div>
+                </div>
+            `).join('');
+
+            if (isManager) {
+                html += `
+                    <div class="add-culture-btn visible" onclick="showAddCultureModal()">
+                        <span>+</span>
+                        <span style="font-size: 1rem;">添加文化解码</span>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function deleteCulture(id) {
+            if (!confirm('确定要删除这个文化解码吗？')) return;
+            const items = getCultureItems();
+            const filtered = items.filter(i => i.id !== id);
+            saveCultureItems(filtered);
+            renderCultureCards();
+        }
+
+        function goToCultureDetail(id) {
+            window.location.href = `culture-detail.html?id=${id}`;
+        }
+
+        function editCulture(id) {
+            const items = getCultureItems();
+            const item = items.find(i => i.id === id);
+            if (item) {
+                editingCultureId = id;
+                document.getElementById('cultureTitle').value = item.title;
+                document.getElementById('cultureContent').value = item.content;
+                document.getElementById('cultureSource').value = item.source;
+                document.getElementById('cultureModalTitle').textContent = '编辑文化解码';
+                
+                // Clear previous preview
+                document.getElementById('cultureImagePreview').classList.remove('has-image');
+                document.getElementById('culturePreviewImg').src = '';
+                document.getElementById('cultureImageUpload').value = '';
+                
+                document.getElementById('cultureModal').classList.add('active');
+            }
+        }
+
+        function addCultureImage(id) {
+            const items = getCultureItems();
+            const item = items.find(i => i.id === id);
+            if (item) {
+                editingCultureId = id;
+                document.getElementById('cultureTitle').value = item.title;
+                document.getElementById('cultureContent').value = item.content;
+                document.getElementById('cultureSource').value = item.source;
+                document.getElementById('cultureModalTitle').textContent = '添加图片';
+                
+                // Show existing image if present
+                if (item.image) {
+                    document.getElementById('culturePreviewImg').src = item.image;
+                    document.getElementById('cultureImagePreview').classList.add('has-image');
+                } else {
+                    document.getElementById('cultureImagePreview').classList.remove('has-image');
+                    document.getElementById('culturePreviewImg').src = '';
+                }
+                document.getElementById('cultureImageUpload').value = '';
+                
+                document.getElementById('cultureModal').classList.add('active');
+            }
+        }
+
+        function showAddCultureModal() {
+            editingCultureId = null;
+            document.getElementById('cultureTitle').value = '';
+            document.getElementById('cultureContent').value = '';
+            document.getElementById('cultureSource').value = '';
+            document.getElementById('cultureImagePreview').classList.remove('has-image');
+            document.getElementById('culturePreviewImg').src = '';
+            document.getElementById('cultureImageUpload').value = '';
+            document.getElementById('cultureModalTitle').textContent = '添加文化解码';
+            document.getElementById('cultureModal').classList.add('active');
+        }
+
+        // Culture Image Upload
+        const cultureImageUpload = document.getElementById('cultureImageUpload');
+        const cultureImagePreview = document.getElementById('cultureImagePreview');
+        const culturePreviewImg = document.getElementById('culturePreviewImg');
+        const removeCulturePreview = document.getElementById('removeCulturePreview');
+        const cultureError = document.getElementById('cultureError');
+
+        cultureImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    cultureError.textContent = validation.message;
+                    cultureError.classList.add('active');
+                    return;
+                }
+                cultureError.classList.remove('active');
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    culturePreviewImg.src = e.target.result;
+                    cultureImagePreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeCulturePreview.addEventListener('click', () => {
+            cultureImagePreview.classList.remove('has-image');
+            culturePreviewImg.src = '';
+            cultureImageUpload.value = '';
+        });
+
+        document.getElementById('saveCultureBtn').addEventListener('click', () => {
+            const title = document.getElementById('cultureTitle').value.trim();
+            const content = document.getElementById('cultureContent').value.trim();
+            const source = document.getElementById('cultureSource').value.trim();
+            
+            if (!title || !content) {
+                cultureError.textContent = '请填写标题和内容';
+                cultureError.classList.add('active');
+                return;
+            }
+            cultureError.classList.remove('active');
+
+            const items = getCultureItems();
+            const imageData = cultureImagePreview.classList.contains('has-image') ? culturePreviewImg.src : '';
+            
+            if (editingCultureId) {
+                // Edit existing
+                const index = items.findIndex(i => i.id === editingCultureId);
+                if (index !== -1) {
+                    items[index] = {
+                        ...items[index],
+                        title: title,
+                        content: content,
+                        source: source,
+                        image: imageData || items[index].image
+                    };
+                }
+            } else {
+                // Add new
+                items.push({
+                    id: Date.now(),
+                    title: title,
+                    content: content,
+                    source: source,
+                    image: imageData
+                });
+            }
+            
+            saveCultureItems(items);
+            renderCultureCards();
+            document.getElementById('cultureModal').classList.remove('active');
+        });
+
+        document.getElementById('cancelCultureBtn').addEventListener('click', () => {
+            document.getElementById('cultureModal').classList.remove('active');
+            cultureError.classList.remove('active');
+        });
+
+        document.getElementById('cultureModalClose').addEventListener('click', () => {
+            document.getElementById('cultureModal').classList.remove('active');
+        });
+
+        // Diary data management
+        const DIARY_KEY = 'wanning_diary_records';
+
+        function getDiaryRecords() {
+            const records = localStorage.getItem(DIARY_KEY);
+            return records ? JSON.parse(records) : getDefaultDiaryRecords();
+        }
+
+        function getDefaultDiaryRecords() {
+            return [
+                {
+                    id: Date.now() - 3,
+                    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',
+                    text: '今天来到了石梅湾，这里的海水真的太美了！银白色的沙滩绵延数公里，海水清澈见底。我在海边漫步了很久，感受着海风和海浪的声音。中午在附近的餐厅吃了一顿海鲜大餐，新鲜的虾蟹让我回味无穷。下午尝试了冲浪，虽然摔了好几次，但那种在浪尖上的感觉真的很棒！晚上坐在沙滩上看日落，天空被染成了金黄色，太美了！',
+                    date: '2025-01-15'
+                },
+                {
+                    id: Date.now() - 2,
+                    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80',
+                    text: '日月湾果然名不虚传！这里简直是冲浪爱好者的天堂。海滩上到处都是背着冲浪板的年轻人，充满了活力。我在一家冲浪俱乐部报了课程，教练很专业，教得很耐心。经过一下午的练习，我终于能站在冲浪板上滑行了一段距离，那种成就感无法用言语形容。晚上在海边的酒吧喝了杯鸡尾酒，听着海浪声，感觉生活真美好。',
+                    date: '2025-01-16'
+                },
+                {
+                    id: Date.now() - 1,
+                    image: 'https://images.unsplash.com/photo-1523374329863-d400fd0bf935?w=600&q=80',
+                    text: '今天参观了兴隆热带植物园，真是大开眼界！园内有各种各样的热带植物，很多都是我从未见过的。讲解员介绍了许多植物的特性和用途，让我学到了很多知识。最让我印象深刻的是咖啡园和巧克力制作体验。我亲手研磨了咖啡豆，品尝了自己制作的咖啡，香气浓郁，口感醇厚。这里的南洋风情也很浓厚，让人感觉仿佛置身于东南亚。',
+                    date: '2025-01-17'
+                }
+            ];
+        }
+
+        function saveDiaryRecords(records) {
+            localStorage.setItem(DIARY_KEY, JSON.stringify(records));
+        }
+
+        function renderDiaryGrid() {
+            const grid = document.getElementById('diaryGrid');
+            const records = getDiaryRecords();
+            records.sort((a, b) => b.id - a.id);
+            
+            grid.innerHTML = records.map((record, index) => `
+                <div class="diary-card" data-id="${record.id}" style="animation-delay: ${index * 0.1}s;">
+                    <div class="diary-overlay"></div>
+                    <img src="${record.image}" alt="探访照片">
+                    <div class="diary-content">
+                        <div class="diary-date">📅 ${record.date}</div>
+                        <p class="diary-text">${record.text}</p>
+                        <div class="diary-action">
+                            <span class="btn-detail">查看详情</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click event listeners
+            document.querySelectorAll('.diary-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    navigateToDetail(id);
+                });
+            });
+        }
+
+        function navigateToDetail(id) {
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+            
+            setTimeout(() => {
+                window.location.href = `diary-detail.html?id=${id}`;
+            }, 300);
+        }
+
+        // Products data management
+        const PRODUCTS_KEY = 'wanning_products';
+        let editingProductId = null;
+
+        function getProducts() {
+            const products = localStorage.getItem(PRODUCTS_KEY);
+            return products ? JSON.parse(products) : getDefaultProducts();
+        }
+
+        function getDefaultProducts() {
+            return [
+                { id: 1, name: '后安粉', price: '约15-25元/碗', location: '推荐：后安镇正宗后安粉店', image: '' },
+                { id: 2, name: '东山羊', price: '约80-120元/斤', location: '推荐：东山岭景区周边餐馆', image: '' },
+                { id: 3, name: '和乐蟹', price: '时价', location: '推荐：和乐镇海鲜市场', image: '' },
+                { id: 4, name: '兴隆咖啡', price: '约60-120元/袋', location: '推荐：兴隆华侨农场咖啡厂', image: '' },
+                { id: 5, name: '万宁菠萝', price: '约5-10元/个', location: '推荐：各大农贸市场', image: '' },
+                { id: 6, name: '椰子制品', price: '约10-30元', location: '推荐：各旅游景区', image: '' }
+            ];
+        }
+
+        function saveProducts(products) {
+            localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+        }
+
+        function renderProductsGrid() {
+            const grid = document.getElementById('productsGrid');
+            const products = getProducts();
+            const isManager = localStorage.getItem('wanning_manager_active') === 'true';
+            
+            let html = products.map((product, index) => `
+                <div class="product-card" data-id="${product.id}" style="animation-delay: ${index * 0.1}s;">
+                    <div class="product-overlay"></div>
+                    ${product.image ? `<img src="${product.image}" alt="${product.name}" class="product-image">` : `<div class="product-icon">🍽️</div>`}
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p class="price">💰 ${product.price}</p>
+                        <p class="location">📍 ${product.location}</p>
+                    </div>
+                    <div class="product-action">
+                        <span class="btn-detail-product">查看详情 →</span>
+                    </div>
+                    ${isManager ? `
+                        <div class="product-actions">
+                            <button class="btn-edit-product" onclick="editProduct(${product.id})">✏️</button>
+                            <button class="btn-delete-product" onclick="deleteProduct(${product.id})">🗑️</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            if (isManager) {
+                html += `
+                    <div class="add-product-btn" onclick="showAddProductModal()">
+                        <span>+</span>
+                        <span style="font-size: 1rem;">添加风物</span>
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+
+            // Add click event listeners for product cards
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Check if click is on edit/delete buttons
+                    if (e.target.classList.contains('btn-edit-product') || 
+                        e.target.classList.contains('btn-delete-product')) {
+                        return;
+                    }
+                    const id = this.getAttribute('data-id');
+                    navigateToProductDetail(id);
+                });
+            });
+        }
+
+        function navigateToProductDetail(id) {
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+            
+            setTimeout(() => {
+                window.location.href = `product-detail.html?id=${id}`;
+            }, 300);
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('确定要删除这个风物吗？')) return;
+            const products = getProducts();
+            const filtered = products.filter(p => p.id !== id);
+            saveProducts(filtered);
+            renderProductsGrid();
+        }
+
+        function editProduct(id) {
+            const products = getProducts();
+            const product = products.find(p => p.id === id);
+            if (product) {
+                editingProductId = id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productLocation').value = product.location;
+                document.getElementById('productModalTitle').textContent = '编辑风物';
+                document.getElementById('productModal').classList.add('active');
+            }
+        }
+
+        function showAddProductModal() {
+            editingProductId = null;
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productLocation').value = '';
+            document.getElementById('productImageUpload').value = '';
+            document.getElementById('productModalTitle').textContent = '添加风物';
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function saveProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const price = document.getElementById('productPrice').value.trim();
+            const location = document.getElementById('productLocation').value.trim();
+            
+            if (!name || !price || !location) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            const products = getProducts();
+            const fileInput = document.getElementById('productImageUpload');
+            
+            if (editingProductId) {
+                const index = products.findIndex(p => p.id === editingProductId);
+                if (index !== -1) {
+                    if (fileInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            products[index] = { ...products[index], name, price, location, image: e.target.result };
+                            saveProducts(products);
+                            renderProductsGrid();
+                            document.getElementById('productModal').classList.remove('active');
+                        };
+                        reader.readAsDataURL(fileInput.files[0]);
+                    } else {
+                        products[index] = { ...products[index], name, price, location };
+                        saveProducts(products);
+                        renderProductsGrid();
+                        document.getElementById('productModal').classList.remove('active');
+                    }
+                }
+            } else {
+                if (fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        products.push({
+                            id: Date.now(),
+                            name,
+                            price,
+                            location,
+                            image: e.target.result
+                        });
+                        saveProducts(products);
+                        renderProductsGrid();
+                        document.getElementById('productModal').classList.remove('active');
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    products.push({
+                        id: Date.now(),
+                        name,
+                        price,
+                        location,
+                        image: ''
+                    });
+                    saveProducts(products);
+                    renderProductsGrid();
+                    document.getElementById('productModal').classList.remove('active');
+                }
+            }
+        }
+
+        // Manager mode
+        const ACCESS_CODE = 'wanning2025';
+
+        function activateManagerMode() {
+            localStorage.setItem('wanning_manager_active', 'true');
+            document.getElementById('managerHeader').classList.add('active');
+            document.getElementById('heroEditBtn').style.display = 'flex';
+            renderCultureCards();
+            renderProductsGrid();
+            renderRecordsList();
+        }
+
+        function deactivateManagerMode() {
+            localStorage.removeItem('wanning_manager_active');
+            document.getElementById('managerHeader').classList.remove('active');
+            document.getElementById('heroEditBtn').style.display = 'none';
+            renderCultureCards();
+            renderProductsGrid();
+        }
+
+        // Login modal
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const code = document.getElementById('accessCode').value.trim();
+            if (code === ACCESS_CODE) {
+                activateManagerMode();
+                document.getElementById('loginModal').classList.remove('active');
+                document.getElementById('accessCode').value = '';
+                document.getElementById('loginError').classList.remove('active');
+            } else {
+                document.getElementById('loginError').classList.add('active');
+            }
+        });
+
+        // Keyboard shortcut Ctrl+M / Cmd+M
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+                e.preventDefault();
+                const isActive = localStorage.getItem('wanning_manager_active') === 'true';
+                if (isActive) {
+                    if (confirm('确定要退出管理者模式吗？')) {
+                        deactivateManagerMode();
+                    }
+                } else {
+                    document.getElementById('loginModal').classList.add('active');
+                }
+            }
+        });
+
+        // Manager panel toggle
+        document.getElementById('managerBtn').addEventListener('click', () => {
+            const panel = document.getElementById('managerPanel');
+            panel.classList.toggle('active');
+            populateSelectors();
+        });
+
+        // Panel tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
+                
+                if (tabId === 'overview') {
+                    loadOverviewData();
+                } else if (tabId === 'culture') {
+                    populateCultureSelector();
+                } else if (tabId === 'products') {
+                    populateProductSelector();
+                }
+            });
+        });
+
+        // Populate selectors
+        function populateSelectors() {
+            populateCultureSelector();
+            populateProductSelector();
+        }
+
+        function populateCultureSelector() {
+            const selector = document.getElementById('culturePanelSelector');
+            const items = getCultureItems();
+            selector.innerHTML = items.map(item => 
+                `<option value="${item.id}">${item.title}</option>`
+            ).join('');
+        }
+
+        function populateProductSelector() {
+            const selector = document.getElementById('productPanelSelector');
+            const items = getProducts();
+            selector.innerHTML = items.map(item => 
+                `<option value="${item.id}">${item.name}</option>`
+            ).join('');
+        }
+
+        // Overview Management
+        const OVERVIEW_KEY = 'wanning_overview';
+
+        function getOverviewData() {
+            const data = localStorage.getItem(OVERVIEW_KEY);
+            return data ? JSON.parse(data) : null;
+        }
+
+        function saveOverviewData(data) {
+            localStorage.setItem(OVERVIEW_KEY, JSON.stringify(data));
+        }
+
+        function applyOverviewData() {
+            const data = getOverviewData();
+            if (data) {
+                if (data.title) document.getElementById('overviewTitle').textContent = data.title;
+                if (data.subtitle) document.getElementById('overviewSubtitle').textContent = data.subtitle;
+                if (data.content) document.getElementById('overviewText').innerHTML = data.content;
+                if (data.image) {
+                    document.getElementById('overview').style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${data.image})`;
+                }
+            }
+        }
+
+        function loadOverviewData() {
+            const data = getOverviewData();
+            if (data) {
+                document.getElementById('overviewTitleInput').value = data.title || '';
+                document.getElementById('overviewSubtitleInput').value = data.subtitle || '';
+                document.getElementById('overviewContentInput').value = data.content || '';
+                if (data.image) {
+                    document.getElementById('overviewPanelImg').src = data.image;
+                    document.getElementById('overviewPanelPreview').classList.add('has-image');
+                }
+            }
+        }
+
+        // Overview image upload in panel
+        const overviewTitleInput = document.getElementById('overviewTitleInput');
+        const overviewSubtitleInput = document.getElementById('overviewSubtitleInput');
+        const overviewContentInput = document.getElementById('overviewContentInput');
+        const overviewPanelUpload = document.getElementById('overviewPanelUpload');
+        const overviewPanelPreview = document.getElementById('overviewPanelPreview');
+        const overviewPanelImg = document.getElementById('overviewPanelImg');
+        const saveOverviewPanelBtn = document.getElementById('saveOverviewPanelBtn');
+
+        overviewPanelUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    overviewPanelImg.src = e.target.result;
+                    overviewPanelPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveOverviewPanelBtn.addEventListener('click', () => {
+            const data = {
+                title: overviewTitleInput.value || '万宁概览',
+                subtitle: overviewSubtitleInput.value || '走进这座充满活力的滨海城市',
+                content: overviewContentInput.value || '<p>万宁市位于海南岛东南部，是一座集自然风光与人文风情于一体的滨海旅游城市。</p>',
+                image: overviewPanelImg.src || ''
+            };
+            saveOverviewData(data);
+            applyOverviewData();
+            alert('万宁概览已更新！');
+        });
+
+        // Apply overview data on load
+        applyOverviewData();
+
+        // Hero image upload in panel
+        const heroPanelUpload = document.getElementById('heroPanelUpload');
+        const heroPanelPreview = document.getElementById('heroPanelPreview');
+        const heroPanelImg = document.getElementById('heroPanelImg');
+        const saveHeroPanelBtn = document.getElementById('saveHeroPanelBtn');
+
+        heroPanelUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    heroPanelImg.src = e.target.result;
+                    heroPanelPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveHeroPanelBtn.addEventListener('click', () => {
+            if (heroPanelImg.src) {
+                saveHeroBackground(heroPanelImg.src);
+                applyHeroBackground();
+                alert('首页背景已更新！');
+            }
+        });
+
+        // Culture image upload in panel
+        const culturePanelUpload = document.getElementById('culturePanelUpload');
+        const culturePanelPreview = document.getElementById('culturePanelPreview');
+        const culturePanelImg = document.getElementById('culturePanelImg');
+        const saveCulturePanelBtn = document.getElementById('saveCulturePanelBtn');
+        const culturePanelSelector = document.getElementById('culturePanelSelector');
+
+        culturePanelUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    culturePanelImg.src = e.target.result;
+                    culturePanelPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveCulturePanelBtn.addEventListener('click', () => {
+            const cultureId = parseInt(culturePanelSelector.value);
+            if (culturePanelImg.src && cultureId) {
+                const items = getCultureItems();
+                const item = items.find(i => i.id === cultureId);
+                if (item) {
+                    item.image = culturePanelImg.src;
+                    saveCultureItems(items);
+                    renderCultureCards();
+                    alert('文化解码图片已更新！');
+                }
+            }
+        });
+
+        // Product image upload in panel
+        const productPanelUpload = document.getElementById('productPanelUpload');
+        const productPanelPreview = document.getElementById('productPanelPreview');
+        const productPanelImg = document.getElementById('productPanelImg');
+        const saveProductPanelBtn = document.getElementById('saveProductPanelBtn');
+        const productPanelSelector = document.getElementById('productPanelSelector');
+
+        productPanelUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    productPanelImg.src = e.target.result;
+                    productPanelPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveProductPanelBtn.addEventListener('click', () => {
+            const productId = parseInt(productPanelSelector.value);
+            if (productPanelImg.src && productId) {
+                const products = getProducts();
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    product.image = productPanelImg.src;
+                    saveProducts(products);
+                    renderProductsGrid();
+                    alert('风物档案图片已更新！');
+                }
+            }
+        });
+
+        // Map image upload in panel
+        const mapPanelUpload = document.getElementById('mapPanelUpload');
+        const mapPanelPreview = document.getElementById('mapPanelPreview');
+        const mapPanelImg = document.getElementById('mapPanelImg');
+        const saveMapPanelBtn = document.getElementById('saveMapPanelBtn');
+        const spotPanelSelector = document.getElementById('spotPanelSelector');
+        const spotPanelUpload = document.getElementById('spotPanelUpload');
+
+        mapPanelUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    mapPanelImg.src = e.target.result;
+                    mapPanelPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        spotPanelUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const spotId = spotPanelSelector.value;
+                    updateSpotImage(spotId, e.target.result);
+                    alert('景点图片已更新！');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveMapPanelBtn.addEventListener('click', () => {
+            if (mapPanelImg.src) {
+                saveMapBackground(mapPanelImg.src);
+                applyMapBackground();
+            }
+            alert('地图设置已保存！');
+        });
+
+        // Diary records management
+        function renderRecordsList() {
+            const list = document.getElementById('recordsList');
+            const records = getDiaryRecords();
+            records.sort((a, b) => b.id - a.id);
+            
+            list.innerHTML = records.map(record => `
+                <div class="record-item">
+                    <img src="${record.image}" alt="预览">
+                    <div class="record-text">${record.text}</div>
+                    <div class="record-date">📅 ${record.date}</div>
+                    <div class="record-actions">
+                        <button class="btn-edit" onclick="editDiary(${record.id})">✏️</button>
+                        <button class="btn-delete" onclick="deleteDiary(${record.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let editingDiaryId = null;
+
+        function deleteDiary(id) {
+            if (!confirm('确定要删除这条记录吗？')) return;
+            const records = getDiaryRecords();
+            const filtered = records.filter(r => r.id !== id);
+            saveDiaryRecords(filtered);
+            renderDiaryGrid();
+            renderRecordsList();
+        }
+
+        function editDiary(id) {
+            const records = getDiaryRecords();
+            const record = records.find(r => r.id === id);
+            if (record) {
+                editingDiaryId = id;
+                document.getElementById('diaryText').value = record.text;
+                document.getElementById('imageUpload').value = '';
+            }
+        }
+
+        // Diary save button
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const text = document.getElementById('diaryText').value.trim();
+            const fileInput = document.getElementById('imageUpload');
+            
+            if (text.length < 200) {
+                alert('见闻内容需要200字以上');
+                return;
+            }
+
+            const records = getDiaryRecords();
+            const today = new Date().toISOString().split('T')[0];
+
+            if (editingDiaryId) {
+                const index = records.findIndex(r => r.id === editingDiaryId);
+                if (index !== -1) {
+                    if (fileInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            records[index] = { ...records[index], text, image: e.target.result };
+                            saveDiaryRecords(records);
+                            renderDiaryGrid();
+                            renderRecordsList();
+                        };
+                        reader.readAsDataURL(fileInput.files[0]);
+                    } else {
+                        records[index] = { ...records[index], text };
+                        saveDiaryRecords(records);
+                        renderDiaryGrid();
+                        renderRecordsList();
+                    }
+                }
+                editingDiaryId = null;
+            } else {
+                if (fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        records.push({
+                            id: Date.now(),
+                            image: e.target.result,
+                            text,
+                            date: today
+                        });
+                        saveDiaryRecords(records);
+                        renderDiaryGrid();
+                        renderRecordsList();
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    alert('请上传一张图片');
+                    return;
+                }
+            }
+
+            document.getElementById('diaryText').value = '';
+            document.getElementById('imageUpload').value = '';
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            document.getElementById('managerPanel').classList.remove('active');
+            document.getElementById('diaryText').value = '';
+            document.getElementById('imageUpload').value = '';
+            editingDiaryId = null;
+        });
+
+        // Product modal events
+        document.getElementById('saveProductBtn').addEventListener('click', saveProduct);
+
+        document.getElementById('cancelProductBtn').addEventListener('click', () => {
+            document.getElementById('productModal').classList.remove('active');
+        });
+
+        document.getElementById('productModalClose').addEventListener('click', () => {
+            document.getElementById('productModal').classList.remove('active');
+        });
+
+        // Hero edit button
+        document.getElementById('heroEditBtn').addEventListener('click', () => {
+            document.getElementById('heroModal').classList.add('active');
+        });
+
+        // Links management
+        const LINKS_KEY = 'wanning_links';
+        let editingLinkId = null;
+
+        function getLinks() {
+            const links = localStorage.getItem(LINKS_KEY);
+            return links ? JSON.parse(links) : getDefaultLinks();
+        }
+
+        function getDefaultLinks() {
+            return [
+                {
+                    id: 1,
+                    title: '文化解码',
+                    description: '深入了解万宁历史文化',
+                    url: 'index.html#culture',
+                    icon: '🏛️',
+                    order: 1,
+                    section: 'culture',
+                    image: ''
+                },
+                {
+                    id: 2,
+                    title: '风物档案',
+                    description: '品味万宁特色美食',
+                    url: 'index.html#products',
+                    icon: '🍍',
+                    order: 2,
+                    section: 'products',
+                    image: ''
+                },
+                {
+                    id: 3,
+                    title: '互动地图',
+                    description: '探索万宁旅游景点',
+                    url: 'index.html#map-section',
+                    icon: '🗺️',
+                    order: 3,
+                    section: 'map',
+                    image: ''
+                }
+            ];
+        }
+
+        function saveLinks(links) {
+            localStorage.setItem(LINKS_KEY, JSON.stringify(links));
+        }
+
+        function renderLinksList() {
+            const container = document.getElementById('linksContainer');
+            const links = getLinks();
+            links.sort((a, b) => a.order - b.order);
+
+            if (links.length === 0) {
+                container.innerHTML = '<div class="links-empty">暂无链接，点击上方添加</div>';
+                return;
+            }
+
+            container.innerHTML = links.map(link => `
+                <div class="link-item" data-id="${link.id}">
+                    <div class="link-icon">${link.icon}</div>
+                    <div class="link-info">
+                        <div class="link-title">${link.title}</div>
+                        <div class="link-url">${link.url}</div>
+                    </div>
+                    <div class="link-actions">
+                        <button class="btn-up" onclick="moveLinkUp(${link.id})" title="上移">↑</button>
+                        <button class="btn-down" onclick="moveLinkDown(${link.id})" title="下移">↓</button>
+                        <button class="btn-edit-link" onclick="editLink(${link.id})">✏️</button>
+                        <button class="btn-delete-link" onclick="deleteLink(${link.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addLink() {
+            const title = document.getElementById('linkTitleInput').value.trim();
+            const description = document.getElementById('linkDescInput').value.trim();
+            const url = document.getElementById('linkUrlInput').value.trim();
+            const icon = document.getElementById('linkIconInput').value.trim() || '🔗';
+            const order = parseInt(document.getElementById('linkOrderInput').value) || 1;
+            const section = document.getElementById('linkSectionInput').value;
+            const image = document.getElementById('linkImageImg').src;
+
+            if (!title || !url) {
+                showToast('请填写标题和URL', 'error');
+                return;
+            }
+
+            const links = getLinks();
+            const newLink = {
+                id: Date.now(),
+                title,
+                description,
+                url,
+                icon,
+                order,
+                section,
+                image: image && image !== 'about:blank' ? image : ''
+            };
+
+            links.push(newLink);
+            saveLinks(links);
+            renderLinksList();
+            clearLinkForm();
+            showToast('链接添加成功', 'success');
+        }
+
+        function editLink(id) {
+            const links = getLinks();
+            const link = links.find(l => l.id === id);
+            if (!link) return;
+
+            editingLinkId = id;
+            document.getElementById('linkTitleInput').value = link.title;
+            document.getElementById('linkDescInput').value = link.description;
+            document.getElementById('linkUrlInput').value = link.url;
+            document.getElementById('linkIconInput').value = link.icon;
+            document.getElementById('linkOrderInput').value = link.order;
+            document.getElementById('linkSectionInput').value = link.section;
+            
+            if (link.image) {
+                document.getElementById('linkImageImg').src = link.image;
+                document.getElementById('linkImagePreview').classList.add('has-image');
+            }
+
+            document.getElementById('addLinkBtn').style.display = 'none';
+            document.getElementById('updateLinkBtn').style.display = 'inline-flex';
+        }
+
+        function updateLink() {
+            if (editingLinkId === null) return;
+
+            const title = document.getElementById('linkTitleInput').value.trim();
+            const description = document.getElementById('linkDescInput').value.trim();
+            const url = document.getElementById('linkUrlInput').value.trim();
+            const icon = document.getElementById('linkIconInput').value.trim() || '🔗';
+            const order = parseInt(document.getElementById('linkOrderInput').value) || 1;
+            const section = document.getElementById('linkSectionInput').value;
+            const image = document.getElementById('linkImageImg').src;
+
+            if (!title || !url) {
+                showToast('请填写标题和URL', 'error');
+                return;
+            }
+
+            const links = getLinks();
+            const index = links.findIndex(l => l.id === editingLinkId);
+            if (index !== -1) {
+                links[index] = {
+                    ...links[index],
+                    title,
+                    description,
+                    url,
+                    icon,
+                    order,
+                    section,
+                    image: image && image !== 'about:blank' ? image : ''
+                };
+                saveLinks(links);
+                renderLinksList();
+                clearLinkForm();
+                showToast('链接更新成功', 'success');
+            }
+        }
+
+        function deleteLink(id) {
+            if (!confirm('确定要删除这个链接吗？')) return;
+
+            const links = getLinks();
+            const filtered = links.filter(l => l.id !== id);
+            saveLinks(filtered);
+            renderLinksList();
+            showToast('链接删除成功', 'success');
+        }
+
+        function moveLinkUp(id) {
+            const links = getLinks();
+            const index = links.findIndex(l => l.id === id);
+            if (index > 0) {
+                const temp = links[index];
+                links[index] = links[index - 1];
+                links[index - 1] = temp;
+                links[index].order = index + 1;
+                links[index - 1].order = index;
+                saveLinks(links);
+                renderLinksList();
+            }
+        }
+
+        function moveLinkDown(id) {
+            const links = getLinks();
+            const index = links.findIndex(l => l.id === id);
+            if (index < links.length - 1) {
+                const temp = links[index];
+                links[index] = links[index + 1];
+                links[index + 1] = temp;
+                links[index].order = index + 1;
+                links[index + 1].order = index + 2;
+                saveLinks(links);
+                renderLinksList();
+            }
+        }
+
+        function clearLinkForm() {
+            document.getElementById('linkTitleInput').value = '';
+            document.getElementById('linkDescInput').value = '';
+            document.getElementById('linkUrlInput').value = '';
+            document.getElementById('linkIconInput').value = '';
+            document.getElementById('linkOrderInput').value = '1';
+            document.getElementById('linkSectionInput').value = 'culture';
+            document.getElementById('linkImageImg').src = '';
+            document.getElementById('linkImagePreview').classList.remove('has-image');
+            document.getElementById('linkImageUpload').value = '';
+            editingLinkId = null;
+            document.getElementById('addLinkBtn').style.display = 'inline-flex';
+            document.getElementById('updateLinkBtn').style.display = 'none';
+        }
+
+        // Link image upload
+        const linkImageUpload = document.getElementById('linkImageUpload');
+        const linkImagePreview = document.getElementById('linkImagePreview');
+        const linkImageImg = document.getElementById('linkImageImg');
+
+        linkImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    alert(validation.message);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    linkImageImg.src = e.target.result;
+                    linkImagePreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Link buttons
+        document.getElementById('addLinkBtn').addEventListener('click', addLink);
+        document.getElementById('updateLinkBtn').addEventListener('click', updateLink);
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        function validateImage(file) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!validTypes.includes(file.type)) {
+                return { valid: false, message: '请上传JPG、PNG或WebP格式的图片' };
+            }
+
+            if (file.size > maxSize) {
+                return { valid: false, message: '图片大小不能超过5MB' };
+            }
+
+            return { valid: true, message: '' };
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            applyHeroBackground();
+            renderCultureCards();
+            renderDiaryGrid();
+            renderProductsGrid();
+            renderLinksList();
+            
+            // Check if manager mode is active
+            if (localStorage.getItem('wanning_manager_active') === 'true') {
+                activateManagerMode();
+            }
+        });
+    </script>
+</body>
+</html>

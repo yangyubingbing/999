@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文化解码详情 - 万宁文旅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A90B8;
+            --secondary-color: #7EC8E3;
+            --bg-color: #E8F4FA;
+            --text-dark: #2C5F7C;
+            --text-light: #5A8FA5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Manager Mode Header */
+        .manager-header {
+            background: linear-gradient(135deg, #2C5F7C, #4A90B8);
+            padding: 1rem 2rem;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            display: none;
+        }
+
+        .manager-header.active {
+            display: block;
+        }
+
+        .manager-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-edit-mode, .btn-save, .btn-preview, .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-edit-mode:hover, .btn-save:hover, .btn-preview:hover, .btn-logout:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        /* Login Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background: #3a7a9e;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Hero Section */
+        .detail-hero {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .hero-upload-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .hero-upload-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .detail-hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .detail-hero-content {
+            padding: 2.5rem;
+        }
+
+        .detail-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .detail-title-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            display: none;
+        }
+
+        .detail-source {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        .detail-source-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-style: italic;
+            display: none;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .content-section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .content-textarea {
+            width: 100%;
+            height: 200px;
+            padding: 1rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-dark);
+            font-family: inherit;
+            display: none;
+        }
+
+        /* Image Gallery */
+        .gallery-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .gallery-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .gallery-section-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .btn-add-gallery {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+            display: none;
+        }
+
+        .btn-add-gallery:hover {
+            background: #3a7a9e;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .gallery-delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .gallery-item:hover .gallery-delete-btn {
+            display: block;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+        }
+
+        /* Related Section */
+        .related-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .related-section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-item {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .related-item:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            z-index: 2000;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            background: rgba(46, 204, 113, 0.9);
+        }
+
+        .toast.error {
+            background: rgba(231, 76, 60, 0.9);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .manager-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .detail-hero-image {
+                height: 250px;
+            }
+
+            .detail-title {
+                font-size: 1.8rem;
+            }
+
+            .content-section,
+            .gallery-section,
+            .related-section {
+                padding: 1.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Manager Header -->
+    <div class="manager-header" id="managerHeader">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+            <span>🔧 管理者模式已激活</span>
+            <div class="manager-actions">
+                <button class="btn-edit-mode" id="editModeBtn">✏️ 编辑模式</button>
+                <button class="btn-preview" id="previewBtn">👁️ 预览</button>
+                <button class="btn-save" id="saveBtn">💾 保存更改</button>
+                <button class="btn-logout" id="logoutBtn">🚪 退出</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html#culture" class="back-btn">← 返回文化解码</a>
+            <h1 class="header-title">万宁文旅</h1>
+            <button class="btn-edit-mode" id="loginBtn" style="display: none;">🔒 登录管理</button>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <h3>管理者登录</h3>
+            <input type="password" id="accessCode" placeholder="请输入访问码">
+            <button id="submitLogin">登录</button>
+            <div class="error-message" id="loginError">访问码错误，请重试</div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading">加载中...</div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent" style="display: none;">
+        <!-- Hero Section -->
+        <section class="detail-hero fade-in">
+            <button class="hero-upload-btn" id="heroUploadBtn">📷 更换图片</button>
+            <img src="" alt="" class="detail-hero-image" id="heroImage">
+            <input type="file" id="heroFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            <div class="detail-hero-content">
+                <h1 class="detail-title" id="detailTitle"></h1>
+                <input type="text" class="detail-title-input" id="editTitle">
+                <p class="detail-source" id="detailSource"></p>
+                <input type="text" class="detail-source-input" id="editSource">
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <section class="content-section fade-in">
+            <h2>详细介绍</h2>
+            <div id="detailContent"></div>
+            <textarea class="content-textarea" id="editContent"></textarea>
+        </section>
+
+        <!-- Image Gallery -->
+        <section class="gallery-section fade-in">
+            <div class="gallery-section-header">
+                <h2>相关图片</h2>
+                <button class="btn-add-gallery" id="addGalleryBtn">+ 添加图片</button>
+                <input type="file" id="galleryFileInput" accept="image/jpeg,image/png,image/webp" multiple style="display: none;">
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </section>
+
+        <!-- Related Section -->
+        <section class="related-section fade-in">
+            <h2>相关内容</h2>
+            <div class="related-grid" id="relatedGrid"></div>
+        </section>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">×</span>
+        <img src="" alt="" id="lightboxImage">
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const ACCESS_CODE = 'wanning2025';
+        const CULTURE_KEY = 'wanning_culture';
+        let isManagerMode = false;
+        let isEditMode = false;
+        let currentItemId = null;
+        let currentItem = null;
+        let editedData = {};
+
+        // Get URL parameter
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get culture data from localStorage
+        function getCultureItems() {
+            const items = localStorage.getItem(CULTURE_KEY);
+            return items ? JSON.parse(items) : getDefaultCultureItems();
+        }
+
+        function getDefaultCultureItems() {
+            return [
+                {
+                    id: 1,
+                    title: '历史渊源',
+                    content: '万宁市历史悠久，早在新石器时代就有人类活动。自唐代贞观五年（公元631年）设县，至今已有近1400年历史。万宁古称"万州"，是海南历史上的重要州府之一，留下了丰富的历史遗迹和人文景观。这里是著名的"侨乡"，大量华侨从这里走向世界，带回了南洋文化，形成了独特的侨乡文化风貌。兴隆华侨农场就是这段历史的生动见证。',
+                    source: '参考来源：万宁市人民政府官网',
+                    image: '',
+                    fullContent: `
+                        <p>万宁市历史悠久，早在新石器时代就有人类活动。自唐代贞观五年（公元631年）设县，至今已有近1400年历史。万宁古称"万州"，是海南历史上的重要州府之一，留下了丰富的历史遗迹和人文景观。</p>
+                        <p>这里是著名的"侨乡"，大量华侨从这里走向世界，带回了南洋文化，形成了独特的侨乡文化风貌。兴隆华侨农场就是这段历史的生动见证。</p>
+                        <p>万宁的历史文化底蕴深厚，从古至今都是海南岛东南部的重要城市。在漫长的历史长河中，万宁积淀了丰富的文化遗产，包括古建筑、传统技艺、民俗风情等。</p>
+                        <p>作为海南四大古州之一，万宁在历史上曾是海上丝绸之路的重要节点，促进了中外文化的交流与融合。这里不仅有中原文化的传承，还有南洋文化的渗透，形成了独特的文化景观。</p>
+                    `,
+                    gallery: [
+                        'https://images.unsplash.com/photo-1599577908906-8d6c700342b5?w=600&q=80',
+                        'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=600&q=80',
+                        'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80'
+                    ]
+                },
+                {
+                    id: 2,
+                    title: '非遗项目',
+                    content: '万宁市拥有多项省级非物质文化遗产，其中最具代表性的是"万宁龙滚军坡节"和"兴隆咖啡制作技艺"。军坡节是海南特有的民俗节日，源于冼夫人文化，每年农历二月初二至三月初三举行，是一场融合祭祀、表演、商贸的盛大活动。兴隆咖啡制作技艺则传承了东南亚咖啡烘焙工艺，香气浓郁，独具风味。',
+                    source: '参考来源：海南省非物质文化遗产保护中心',
+                    image: '',
+                    fullContent: `
+                        <p>万宁市拥有多项省级非物质文化遗产，其中最具代表性的是"万宁龙滚军坡节"和"兴隆咖啡制作技艺"。</p>
+                        <p>军坡节是海南特有的民俗节日，源于冼夫人文化，每年农历二月初二至三月初三举行，是一场融合祭祀、表演、商贸的盛大活动。节日期间，当地民众会举行各种传统仪式，包括舞龙舞狮、抬神巡游、唱戏等，场面热闹非凡。</p>
+                        <p>兴隆咖啡制作技艺则传承了东南亚咖啡烘焙工艺，香气浓郁，独具风味。兴隆咖啡的历史可以追溯到上世纪50年代，当时大批归国华侨来到兴隆，带来了先进的咖啡种植和烘焙技术。</p>
+                        <p>此外，万宁还有"东山羊养殖技艺"、"和乐蟹养殖技艺"等多项非物质文化遗产，这些都是万宁人民世代相传的宝贵财富。</p>
+                    `,
+                    gallery: [
+                        'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=600&q=80',
+                        'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80',
+                        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80'
+                    ]
+                },
+                {
+                    id: 3,
+                    title: '节庆活动',
+                    content: '万宁每年举办多项重大节庆活动，其中最著名的是"万宁国际冲浪节"，自2010年起每年举办，吸引了全球顶尖冲浪选手参与，成为亚洲最具影响力的冲浪赛事之一。此外，还有"兴隆咖啡文化节"、"东山岭登山节"、"和乐蟹美食节"等特色活动，展现了万宁独特的旅游魅力。',
+                    source: '参考来源：万宁市旅游和文化广电体育局',
+                    image: '',
+                    fullContent: `
+                        <p>万宁每年举办多项重大节庆活动，其中最著名的是"万宁国际冲浪节"，自2010年起每年举办，吸引了全球顶尖冲浪选手参与，成为亚洲最具影响力的冲浪赛事之一。</p>
+                        <p>冲浪节期间，来自世界各地的冲浪高手齐聚日月湾，在碧蓝的海水中展开激烈角逐。除了专业比赛，还有冲浪体验、沙滩派对、音乐演出等丰富多彩的活动。</p>
+                        <p>此外，还有"兴隆咖啡文化节"、"东山岭登山节"、"和乐蟹美食节"等特色活动。兴隆咖啡文化节展示了万宁独特的咖啡文化，游客可以品尝各种咖啡，了解咖啡的制作过程。</p>
+                        <p>东山岭登山节则是一项全民健身活动，每年吸引大量登山爱好者前来挑战"海南第一山"。和乐蟹美食节则是吃货们的盛宴，可以品尝到最正宗的和乐蟹。</p>
+                    `,
+                    gallery: [
+                        'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&q=80',
+                        'https://images.unsplash.com/photo-1505459668311-8dfac7952bf0?w=600&q=80',
+                        'https://images.unsplash.com/photo-1531722569936-825d3d91d587?w=600&q=80'
+                    ]
+                }
+            ];
+        }
+
+        // Load detail data
+        function loadDetail() {
+            const id = parseInt(getUrlParam('id'));
+            currentItemId = id;
+            const items = getCultureItems();
+            currentItem = items.find(i => i.id === id);
+
+            if (!currentItem) {
+                document.getElementById('loading').textContent = '内容未找到';
+                return;
+            }
+
+            // Hide loading, show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+
+            // Set hero image
+            const heroImage = document.getElementById('heroImage');
+            heroImage.src = currentItem.image || 'https://images.unsplash.com/photo-1599577908906-8d6c700342b5?w=1200&q=80';
+            heroImage.alt = currentItem.title;
+
+            // Set title and source
+            document.getElementById('detailTitle').textContent = currentItem.title;
+            document.getElementById('editTitle').value = currentItem.title;
+            document.getElementById('detailSource').textContent = currentItem.source;
+            document.getElementById('editSource').value = currentItem.source;
+
+            // Set content
+            const contentDiv = document.getElementById('detailContent');
+            const fullContent = currentItem.fullContent || `<p>${currentItem.content}</p>`;
+            contentDiv.innerHTML = fullContent;
+            document.getElementById('editContent').value = currentItem.fullContent || currentItem.content;
+
+            // Set gallery
+            renderGallery(currentItem.gallery || []);
+
+            // Set related items
+            const relatedGrid = document.getElementById('relatedGrid');
+            const relatedItems = items.filter(i => i.id !== id).slice(0, 3);
+
+            relatedGrid.innerHTML = relatedItems.map(related => `
+                <div class="related-item" onclick="goToDetail(${related.id})">
+                    <h3>${related.title}</h3>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">${related.content.substring(0, 50)}...</p>
+                </div>
+            `).join('');
+
+            // Check manager mode
+            checkManagerMode();
+        }
+
+        function renderGallery(images) {
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = images.map((img, index) => `
+                <div class="gallery-item" onclick="openLightbox('${img}')">
+                    <img src="${img}" alt="图片 ${index + 1}">
+                    <button class="gallery-delete-btn" onclick="event.stopPropagation(); deleteGalleryImage(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Lightbox functions
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        }
+
+        function goToDetail(id) {
+            window.location.href = `culture-detail.html?id=${id}`;
+        }
+
+        // Manager Mode Functions
+        function checkManagerMode() {
+            isManagerMode = localStorage.getItem('wanning_manager_active') === 'true';
+            if (isManagerMode) {
+                document.getElementById('managerHeader').classList.add('active');
+                document.getElementById('loginBtn').style.display = 'none';
+                showManagerControls();
+            } else {
+                document.getElementById('loginBtn').style.display = 'inline-flex';
+            }
+        }
+
+        function showManagerControls() {
+            document.getElementById('heroUploadBtn').style.display = 'block';
+            document.getElementById('addGalleryBtn').style.display = 'block';
+            document.querySelectorAll('.gallery-delete-btn').forEach(btn => btn.style.display = 'block');
+        }
+
+        function hideManagerControls() {
+            document.getElementById('heroUploadBtn').style.display = 'none';
+            document.getElementById('addGalleryBtn').style.display = 'none';
+            document.querySelectorAll('.gallery-delete-btn').forEach(btn => btn.style.display = 'none');
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            
+            if (isEditMode) {
+                // Switch to edit mode
+                document.getElementById('detailTitle').style.display = 'none';
+                document.getElementById('editTitle').style.display = 'block';
+                document.getElementById('detailSource').style.display = 'none';
+                document.getElementById('editSource').style.display = 'block';
+                document.getElementById('detailContent').style.display = 'none';
+                document.getElementById('editContent').style.display = 'block';
+                document.getElementById('editModeBtn').textContent = '✓ 完成编辑';
+                showToast('已进入编辑模式', 'success');
+            } else {
+                // Switch to view mode
+                document.getElementById('detailTitle').style.display = 'block';
+                document.getElementById('editTitle').style.display = 'none';
+                document.getElementById('detailSource').style.display = 'block';
+                document.getElementById('editSource').style.display = 'none';
+                document.getElementById('detailContent').style.display = 'block';
+                document.getElementById('editContent').style.display = 'none';
+                document.getElementById('editModeBtn').textContent = '✏️ 编辑模式';
+                showToast('已退出编辑模式', 'success');
+            }
+        }
+
+        function previewChanges() {
+            // Update display with current input values
+            document.getElementById('detailTitle').textContent = document.getElementById('editTitle').value;
+            document.getElementById('detailSource').textContent = document.getElementById('editSource').value;
+            document.getElementById('detailContent').innerHTML = `<p>${document.getElementById('editContent').value}</p>`;
+            
+            // Show preview
+            document.getElementById('detailTitle').style.display = 'block';
+            document.getElementById('editTitle').style.display = 'none';
+            document.getElementById('detailSource').style.display = 'block';
+            document.getElementById('editSource').style.display = 'none';
+            document.getElementById('detailContent').style.display = 'block';
+            document.getElementById('editContent').style.display = 'none';
+            
+            showToast('预览已更新', 'success');
+        }
+
+        function saveChanges() {
+            const items = getCultureItems();
+            const index = items.findIndex(i => i.id === currentItemId);
+            
+            if (index === -1) {
+                showToast('保存失败：未找到对应内容', 'error');
+                return;
+            }
+
+            // Collect edited data
+            const updatedItem = {
+                ...items[index],
+                title: document.getElementById('editTitle').value,
+                source: document.getElementById('editSource').value,
+                fullContent: document.getElementById('editContent').value
+            };
+
+            // Add hero image if updated
+            if (editedData.heroImage) {
+                updatedItem.image = editedData.heroImage;
+            }
+
+            // Add gallery images if updated
+            if (editedData.gallery) {
+                updatedItem.gallery = editedData.gallery;
+            }
+
+            items[index] = updatedItem;
+            localStorage.setItem(CULTURE_KEY, JSON.stringify(items));
+
+            // Reload page to show saved changes
+            showToast('保存成功！页面将重新加载', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
+
+        function deleteGalleryImage(index) {
+            if (!confirm('确定要删除这张图片吗？')) return;
+            
+            if (!editedData.gallery) {
+                editedData.gallery = [...(currentItem.gallery || [])];
+            }
+            
+            editedData.gallery.splice(index, 1);
+            renderGallery(editedData.gallery);
+            showToast('图片已删除', 'success');
+        }
+
+        function uploadHeroImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                editedData.heroImage = e.target.result;
+                document.getElementById('heroImage').src = e.target.result;
+                showToast('封面图片已更新', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function uploadGalleryImages(files) {
+            if (!editedData.gallery) {
+                editedData.gallery = [...(currentItem.gallery || [])];
+            }
+
+            let uploadedCount = 0;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    editedData.gallery.push(e.target.result);
+                    uploadedCount++;
+                    if (uploadedCount === files.length) {
+                        renderGallery(editedData.gallery);
+                        showToast(`成功添加 ${uploadedCount} 张图片`, 'success');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function logoutManager() {
+            if (!confirm('确定要退出管理者模式吗？')) return;
+            localStorage.removeItem('wanning_manager_active');
+            window.location.reload();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', loadDetail);
+
+        // Login
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginModal').classList.add('active');
+        });
+
+        document.getElementById('submitLogin').addEventListener('click', () => {
+            const code = document.getElementById('accessCode').value.trim();
+            if (code === ACCESS_CODE) {
+                localStorage.setItem('wanning_manager_active', 'true');
+                document.getElementById('loginModal').classList.remove('active');
+                window.location.reload();
+            } else {
+                document.getElementById('loginError').classList.add('active');
+            }
+        });
+
+        // Manager actions
+        document.getElementById('editModeBtn').addEventListener('click', toggleEditMode);
+        document.getElementById('previewBtn').addEventListener('click', previewChanges);
+        document.getElementById('saveBtn').addEventListener('click', saveChanges);
+        document.getElementById('logoutBtn').addEventListener('click', logoutManager);
+
+        // Image uploads
+        document.getElementById('heroUploadBtn').addEventListener('click', () => {
+            document.getElementById('heroFileInput').click();
+        });
+
+        document.getElementById('heroFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                uploadHeroImage(file);
+            }
+        });
+
+        document.getElementById('addGalleryBtn').addEventListener('click', () => {
+            document.getElementById('galleryFileInput').click();
+        });
+
+        document.getElementById('galleryFileInput').addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                uploadGalleryImages(files);
+            }
+        });
+
+        // Lightbox
+        document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard shortcut Ctrl+M / Cmd+M for login
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+                e.preventDefault();
+                if (!isManagerMode) {
+                    document.getElementById('loginModal').classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

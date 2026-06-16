@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探访实录详情 - 万宁文旅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A90B8;
+            --secondary-color: #7EC8E3;
+            --bg-color: #E8F4FA;
+            --text-dark: #2C5F7C;
+            --text-light: #5A8FA5;
+        }
+
+        /* Manager Header */
+        .manager-header {
+            display: none;
+            background: linear-gradient(135deg, #2C5F7C, #4A90B8);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .manager-header.active {
+            display: flex;
+        }
+
+        .manager-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .manager-header span {
+            color: white;
+            font-weight: 500;
+        }
+
+        .manager-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .manager-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit-mode {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-edit-mode:hover {
+            background: #e6892e;
+        }
+
+        .btn-save {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #2ecc71;
+        }
+
+        .btn-preview {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .btn-preview:hover {
+            background: #8e44ad;
+        }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-content input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-login:hover {
+            background: #085c5a;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .login-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .login-btn:hover {
+            background: #e6892e;
+        }
+
+        /* Gallery Management */
+        .gallery-container {
+            margin-top: 2rem;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .btn-add-image {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add-image:hover {
+            background: #085c5a;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+            font-size: 2rem;
+        }
+
+        .gallery-item-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-item-actions {
+            opacity: 1;
+        }
+
+        .gallery-item-actions button {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: white;
+        }
+
+        .btn-move-up, .btn-move-down {
+            background: var(--primary-color);
+        }
+
+        .btn-remove-image {
+            background: #e74c3c;
+        }
+
+        .btn-move-up:hover, .btn-move-down:hover {
+            background: #085c5a;
+        }
+
+        .btn-remove-image:hover {
+            background: #c0392b;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        /* Hidden file input */
+        .hidden-upload {
+            display: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Hero Section */
+        .detail-hero {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .detail-hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        /* Cover Image Upload Styles */
+        .cover-upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .detail-hero:hover .cover-upload-overlay,
+        .cover-upload-overlay:hover {
+            opacity: 1;
+        }
+
+        .cover-upload-btn {
+            background: rgba(74, 144, 184, 0.9);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .cover-upload-btn:hover {
+            background: rgba(74, 144, 184, 1);
+            transform: scale(1.05);
+        }
+
+        /* Cover Preview Modal */
+        .cover-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .cover-preview-modal.active {
+            display: flex;
+        }
+
+        .cover-preview-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .cover-preview-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .cover-preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .cover-preview-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-confirm {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm:hover {
+            background: #085c5a;
+        }
+
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #ccc;
+        }
+
+        .detail-hero-content {
+            padding: 2.5rem;
+        }
+
+        .detail-date {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .content-section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .info-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card .label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-card .value {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--secondary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-color);
+            border-radius: 12px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--secondary-color);
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            color: var(--text-dark);
+        }
+
+        /* Action Items */
+        .action-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .action-list li {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .action-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Related Content Section */
+        .related-section {
+            background: linear-gradient(135deg, rgba(74, 144, 184, 0.1), rgba(126, 200, 227, 0.1));
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 3rem;
+            border: 2px solid rgba(74, 144, 184, 0.2);
+        }
+
+        .related-section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .related-section h2::before {
+            content: '🔗';
+            font-size: 1.5rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.8rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .related-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .related-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .related-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(74, 144, 184, 0.25);
+        }
+
+        .related-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .related-card:hover .related-card-icon {
+            transform: scale(1.1);
+        }
+
+        .related-card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .related-card-desc {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .related-card-hint {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .related-card:hover .related-card-hint {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .related-card-hint svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Navigation Animation */
+        .nav-transition {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            z-index: 9999;
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-transition.active {
+            left: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .detail-hero-image {
+                height: 250px;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .related-section {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 20px;
+            }
+
+            .timeline::before {
+                left: 5px;
+            }
+
+            .timeline-item::before {
+                left: -33px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Manager Header -->
+    <div class="manager-header" id="managerHeader">
+        <div class="manager-header-content">
+            <span>🔧 探访实录 - 管理者模式</span>
+            <div class="manager-actions">
+                <button class="btn-edit-mode" id="editModeBtn">✏️ 编辑模式</button>
+                <button class="btn-save" id="saveBtn" style="display: none;">💾 保存更改</button>
+                <button class="btn-preview" id="previewBtn">👁️ 预览</button>
+                <button class="btn-logout" id="logoutBtn">🚪 退出</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <h3>🔐 管理者登录</h3>
+            <input type="password" id="accessCode" placeholder="请输入访问码">
+            <button class="btn-login" id="loginBtnModal">登录</button>
+            <div class="error" id="loginError">访问码错误，请重试</div>
+        </div>
+    </div>
+
+    <!-- Login Button -->
+    <button class="login-btn" id="loginBtn">🔑 管理者登录</button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html#diary" class="back-btn">← 返回探访实录</a>
+            <h1 class="header-title">万宁文旅</h1>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading">加载中...</div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent" style="display: none;">
+        <!-- Hero Section -->
+        <section class="detail-hero fade-in">
+            <img src="" alt="" class="detail-hero-image" id="heroImage">
+            <!-- Cover Upload Overlay (visible in manager mode) -->
+            <div class="cover-upload-overlay" id="coverUploadOverlay" style="display: none;">
+                <button class="cover-upload-btn" id="coverUploadBtn">
+                    <span>📷</span> 更换封面图片
+                </button>
+            </div>
+            <input type="file" id="coverImageInput" accept="image/jpeg,image/png,image/webp" class="hidden-upload">
+            <div class="detail-hero-content">
+                <div class="detail-date" id="detailDate"></div>
+            </div>
+        </section>
+
+        <!-- Cover Preview Modal -->
+        <div class="cover-preview-modal" id="coverPreviewModal">
+            <div class="cover-preview-content">
+                <h3>🖼️ 封面预览</h3>
+                <img src="" alt="封面预览" class="cover-preview-image" id="coverPreviewImage">
+                <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.9rem;">确认使用这张图片作为封面？</p>
+                <div class="cover-preview-actions">
+                    <button class="btn-cancel" id="coverCancelBtn">取消</button>
+                    <button class="btn-confirm" id="coverConfirmBtn">确认更换</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Info Section -->
+        <section class="content-section fade-in">
+            <h2>探访信息</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">📍</div>
+                    <div class="label">探访地点</div>
+                    <div class="value" id="infoLocation">万宁市</div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">👥</div>
+                    <div class="label">参与人员</div>
+                    <div class="value" id="infoParticipants">文旅探访小组</div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🎯</div>
+                    <div class="label">探访对象</div>
+                    <div class="value" id="infoTarget">文化景点/特色项目</div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">⏱️</div>
+                    <div class="label">探访时长</div>
+                    <div class="value" id="infoDuration">1天</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="content-section fade-in">
+            <h2>探访过程</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-title">上午：抵达与初步考察</div>
+                    <div class="timeline-content" id="processMorning">探访小组抵达万宁市，首先前往当地文旅局了解基本情况，听取相关负责人介绍万宁市文化旅游资源概况，包括历史文化、自然景观、特色活动等方面的详细介绍。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-title">中午：实地探访核心景点</div>
+                    <div class="timeline-content" id="processNoon">前往本次探访的核心景点进行实地考察，包括参观景点设施、了解运营情况、与工作人员交流等，全面了解景点的特色和亮点。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-title">下午：深入交流与调研</div>
+                    <div class="timeline-content" id="processAfternoon">与景点管理者和当地居民进行深入交流，了解景点的发展历程、面临的挑战以及未来的发展规划，收集第一手资料。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-title">傍晚：总结与反馈</div>
+                    <div class="timeline-content" id="processEvening">对当天的探访进行总结，整理收集到的信息，与相关部门进行反馈交流，提出初步的建议和意见。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Findings Section -->
+        <section class="content-section fade-in">
+            <h2>发现的问题</h2>
+            <ul class="action-list" id="findingsList">
+                <li>部分景点基础设施有待完善，特别是停车场和公共卫生间等配套设施</li>
+                <li>部分文化景点的解说系统不够完善，游客体验有待提升</li>
+                <li>旅游旺季时部分热门景点人流量过大，需要加强疏导和管理</li>
+                <li>部分特色产品的宣传推广力度不够，知名度有待提高</li>
+            </ul>
+        </section>
+
+        <!-- Measures Section -->
+        <section class="content-section fade-in">
+            <h2>采取的措施</h2>
+            <ul class="action-list" id="measuresList">
+                <li>建议加大基础设施投入，改善游客接待条件</li>
+                <li>完善景点解说系统，提供多语种讲解服务</li>
+                <li>制定游客流量控制方案，优化游览体验</li>
+                <li>加强品牌宣传，利用新媒体平台推广特色产品</li>
+            </ul>
+        </section>
+
+        <!-- Follow-up Section -->
+        <section class="content-section fade-in">
+            <h2>后续跟进计划</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">📅</div>
+                    <div class="label">短期计划</div>
+                    <div class="value" style="font-weight: normal;">1个月内完成基础设施改善方案制定</div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">📊</div>
+                    <div class="label">中期计划</div>
+                    <div class="value" style="font-weight: normal;">3个月内完成解说系统升级改造</div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🚀</div>
+                    <div class="label">长期计划</div>
+                    <div class="value" style="font-weight: normal;">6个月内完成品牌推广计划实施</div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🔄</div>
+                    <div class="label">回访安排</div>
+                    <div class="value" style="font-weight: normal;">每季度进行一次回访评估</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery Section -->
+        <section class="content-section fade-in" id="gallerySection" style="display: none;">
+            <h2>📷 探访照片</h2>
+            <div class="gallery-container">
+                <div class="gallery-header">
+                    <h3>照片管理</h3>
+                    <div>
+                        <button class="btn-add-image" id="addImageBtn">
+                            <span>➕</span> 添加照片
+                        </button>
+                        <input type="file" id="imageUpload" accept="image/jpeg,image/png,image/webp" class="hidden-upload" multiple>
+                    </div>
+                </div>
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Gallery items will be dynamically generated -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Notes Section -->
+        <section class="content-section fade-in">
+            <h2>详细记录</h2>
+            <p id="detailNotes">今日探访万宁，收获颇丰。这座城市不仅拥有美丽的自然风光，更有着深厚的历史文化底蕴。从兴隆华侨农场的南洋风情，到东山岭的佛教文化，再到日月湾的冲浪热潮，万宁展现出多元化的旅游魅力。期待未来能够看到万宁文旅产业的更大发展，吸引更多游客前来感受这座城市的独特魅力。</p>
+        </section>
+
+        <!-- Related Content Section -->
+        <section class="related-section fade-in" id="relatedSection">
+            <h2>探索更多</h2>
+            <div class="related-grid" id="relatedGrid">
+                <!-- Related links will be dynamically generated -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Navigation Transition Overlay -->
+    <div class="nav-transition" id="navTransition"></div>
+
+    <script>
+        // Constants
+        const ACCESS_CODE = 'wanning2025';
+        const DIARY_KEY = 'wanning_diary_records';
+        let currentRecordId = null;
+        let isEditMode = false;
+
+        // Get URL parameter
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get diary records from localStorage
+        function getDiaryRecords() {
+            const records = localStorage.getItem(DIARY_KEY);
+            return records ? JSON.parse(records) : getDefaultDiaryRecords();
+        }
+
+        function saveDiaryRecords(records) {
+            localStorage.setItem(DIARY_KEY, JSON.stringify(records));
+        }
+
+        function getDefaultDiaryRecords() {
+            return [
+                {
+                    id: Date.now() - 3,
+                    image: 'images/diary-detail-1.jpg',
+                    text: '今天来到了石梅湾，这里的海水真的太美了！银白色的沙滩绵延数公里，海水清澈见底。我在海边漫步了很久，感受着海风和海浪的声音。中午在附近的餐厅吃了一顿海鲜大餐，新鲜的虾蟹让我回味无穷。下午尝试了冲浪，虽然摔了好几次，但那种在浪尖上的感觉真的很棒！晚上坐在沙滩上看日落，天空被染成了金黄色，太美了！',
+                    date: '2025-01-15',
+                    relatedTopics: ['石梅湾', '冲浪', '海滩'],
+                    photos: []
+                },
+                {
+                    id: Date.now() - 2,
+                    image: 'images/diary-detail-2.jpg',
+                    text: '今天探访了兴隆华侨农场，这里充满了浓郁的南洋风情。参观了咖啡种植园，了解了咖啡的种植和加工过程。品尝了正宗的兴隆咖啡，香气浓郁，口感醇厚。农场里还有各种热带水果，芒果、菠萝蜜都非常新鲜美味。这里的建筑风格也很有特色，充满了东南亚风情。',
+                    date: '2025-01-16',
+                    relatedTopics: ['兴隆华侨农场', '咖啡', '南洋文化'],
+                    photos: []
+                }
+            ];
+        }
+
+        // Related content configurations
+        const relatedSections = [
+            {
+                id: 'culture',
+                title: '文化解码',
+                description: '深入了解万宁的历史文化、民俗风情和人文故事',
+                icon: '🏛️',
+                url: 'index.html#culture',
+                keywords: ['历史', '文化', '民俗', '人文', '故事', '华侨', '南洋', '佛教']
+            },
+            {
+                id: 'products',
+                title: '风物档案',
+                description: '品味万宁特色美食、手工艺品和土特产',
+                icon: '🍍',
+                url: 'index.html#products',
+                keywords: ['美食', '特产', '咖啡', '水果', '手工艺品', '海鲜']
+            },
+            {
+                id: 'map',
+                title: '互动地图',
+                description: '探索万宁四大经典旅游点位，规划您的旅程',
+                icon: '🗺️',
+                url: 'index.html#map-section',
+                keywords: ['地图', '景点', '石梅湾', '日月湾', '东山岭', '兴隆']
+            },
+            {
+                id: 'diary',
+                title: '更多探访',
+                description: '查看其他探访实录，分享旅途见闻',
+                icon: '📝',
+                url: 'index.html#diary',
+                keywords: ['探访', '日记', '见闻', '记录']
+            }
+        ];
+
+        // Generate related content cards based on text analysis
+        function generateRelatedCards(text) {
+            const relatedGrid = document.getElementById('relatedGrid');
+            const matchedSections = relatedSections.map(section => {
+                const matchCount = section.keywords.filter(keyword => 
+                    text.includes(keyword)
+                ).length;
+                return { ...section, matchCount };
+            }).filter(section => section.matchCount > 0 || section.id === 'diary')
+              .sort((a, b) => b.matchCount - a.matchCount)
+              .slice(0, 4);
+
+            matchedSections.forEach((section, index) => {
+                const card = document.createElement('div');
+                card.className = 'related-card';
+                card.style.animationDelay = `${(index + 1) * 0.1}s`;
+                card.innerHTML = `
+                    <span class="related-card-icon">${section.icon}</span>
+                    <h3 class="related-card-title">${section.title}</h3>
+                    <p class="related-card-desc">${section.description}</p>
+                    <div class="related-card-hint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                        <span>点击跳转</span>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => navigateToSection(section.url));
+                relatedGrid.appendChild(card);
+            });
+        }
+
+        // Navigation with transition effect
+        function navigateToSection(url) {
+            const transition = document.getElementById('navTransition');
+            transition.classList.add('active');
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 400);
+        }
+
+        // Load detail data
+        function loadDetail() {
+            const id = parseInt(getUrlParam('id'));
+            currentRecordId = id;
+            const records = getDiaryRecords();
+            const record = records.find(r => r.id === id);
+
+            if (!record) {
+                document.getElementById('loading').textContent = '内容未找到';
+                return;
+            }
+
+            // Hide loading, show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+
+            // Set hero image
+            const heroImage = document.getElementById('heroImage');
+            heroImage.src = record.image;
+            heroImage.alt = '探访照片';
+
+            // Set date
+            document.getElementById('detailDate').textContent = `📅 探访日期：${record.date}`;
+
+            // Set detailed notes
+            document.getElementById('detailNotes').textContent = record.text;
+
+            // Load photo gallery if available
+            if (record.photos && record.photos.length > 0) {
+                renderGallery(record.photos);
+            }
+
+            // Generate related content cards
+            generateRelatedCards(record.text);
+
+            // Show manager elements if active
+            if (localStorage.getItem('wanning_manager_active') === 'true') {
+                activateManagerMode();
+            }
+        }
+
+        // Login Functions
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('accessCode').value = '';
+            document.getElementById('loginError').classList.remove('active');
+        }
+
+        function login() {
+            const code = document.getElementById('accessCode').value.trim();
+            if (code === ACCESS_CODE) {
+                localStorage.setItem('wanning_manager_active', 'true');
+                closeLoginModal();
+                activateManagerMode();
+                showToast('登录成功！管理者模式已激活', 'success');
+            } else {
+                document.getElementById('loginError').classList.add('active');
+            }
+        }
+
+        function logout() {
+            localStorage.setItem('wanning_manager_active', 'false');
+            isEditMode = false;
+            document.getElementById('managerHeader').classList.remove('active');
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('gallerySection').style.display = 'none';
+            document.getElementById('coverUploadOverlay').style.display = 'none';
+            exitEditMode();
+            showToast('已退出管理者模式', 'info');
+        }
+
+        function activateManagerMode() {
+            document.getElementById('managerHeader').classList.add('active');
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('gallerySection').style.display = 'block';
+            document.getElementById('coverUploadOverlay').style.display = 'flex';
+            loadGallery();
+        }
+
+        // Edit Mode Functions
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            if (isEditMode) {
+                enterEditMode();
+                document.getElementById('editModeBtn').textContent = '✅ 编辑模式';
+            } else {
+                exitEditMode();
+                document.getElementById('editModeBtn').textContent = '✏️ 编辑模式';
+            }
+        }
+
+        function enterEditMode() {
+            // Make fields editable
+            const editableElements = [
+                'detailDate',
+                'infoLocation',
+                'infoParticipants',
+                'infoTarget',
+                'infoDuration',
+                'processMorning',
+                'processNoon',
+                'processAfternoon',
+                'processEvening',
+                'detailNotes'
+            ];
+            
+            editableElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.contentEditable = 'true';
+                    el.style.border = '2px dashed var(--secondary-color)';
+                    el.style.padding = '4px 8px';
+                    el.style.borderRadius = '6px';
+                    el.style.background = 'rgba(74, 144, 184, 0.05)';
+                }
+            });
+
+            // Make list items editable
+            const listItems = document.querySelectorAll('#findingsList li, #measuresList li');
+            listItems.forEach(item => {
+                item.contentEditable = 'true';
+                item.style.border = '2px dashed var(--secondary-color)';
+                item.style.padding = '4px 8px';
+                item.style.borderRadius = '6px';
+                item.style.background = 'rgba(74, 144, 184, 0.05)';
+            });
+
+            // Show save button
+            document.getElementById('saveBtn').style.display = 'inline-flex';
+            showToast('已进入编辑模式，点击内容即可修改', 'info');
+        }
+
+        function exitEditMode() {
+            // Make fields non-editable
+            const editableElements = [
+                'detailDate',
+                'infoLocation',
+                'infoParticipants',
+                'infoTarget',
+                'infoDuration',
+                'processMorning',
+                'processNoon',
+                'processAfternoon',
+                'processEvening',
+                'detailNotes'
+            ];
+            
+            editableElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.contentEditable = 'false';
+                    el.style.border = 'none';
+                    el.style.padding = 'initial';
+                    el.style.background = 'none';
+                }
+            });
+
+            // Make list items non-editable
+            const listItems = document.querySelectorAll('#findingsList li, #measuresList li');
+            listItems.forEach(item => {
+                item.contentEditable = 'false';
+                item.style.border = 'none';
+                item.style.padding = 'initial';
+                item.style.background = 'none';
+            });
+
+            // Hide save button
+            document.getElementById('saveBtn').style.display = 'none';
+        }
+
+        // Save Changes
+        function saveChanges() {
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const recordIndex = records.findIndex(r => r.id === id);
+            
+            if (recordIndex === -1) {
+                showToast('记录未找到', 'error');
+                return;
+            }
+
+            const record = records[recordIndex];
+            
+            // Update basic info
+            record.date = document.getElementById('detailDate').textContent.replace('📅 探访日期：', '').trim();
+            record.text = document.getElementById('detailNotes').textContent.trim();
+            
+            // Update timeline content
+            record.morning = document.getElementById('processMorning').textContent.trim();
+            record.noon = document.getElementById('processNoon').textContent.trim();
+            record.afternoon = document.getElementById('processAfternoon').textContent.trim();
+            record.evening = document.getElementById('processEvening').textContent.trim();
+
+            // Update info grid
+            record.location = document.getElementById('infoLocation').textContent.trim();
+            record.participants = document.getElementById('infoParticipants').textContent.trim();
+            record.target = document.getElementById('infoTarget').textContent.trim();
+            record.duration = document.getElementById('infoDuration').textContent.trim();
+
+            // Update findings and measures
+            const findings = Array.from(document.querySelectorAll('#findingsList li')).map(li => li.textContent.trim());
+            const measures = Array.from(document.querySelectorAll('#measuresList li')).map(li => li.textContent.trim());
+            record.findings = findings;
+            record.measures = measures;
+
+            // Save
+            saveDiaryRecords(records);
+            
+            // Exit edit mode
+            toggleEditMode();
+            showToast('保存成功！', 'success');
+        }
+
+        // Cover Image Management
+        let pendingCoverImage = null;
+
+        function openCoverUpload() {
+            document.getElementById('coverImageInput').click();
+        }
+
+        function handleCoverUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const validation = validateImage(file);
+            if (!validation.valid) {
+                showToast(validation.message, 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                pendingCoverImage = e.target.result;
+                document.getElementById('coverPreviewImage').src = pendingCoverImage;
+                document.getElementById('coverPreviewModal').classList.add('active');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function confirmCoverChange() {
+            if (!pendingCoverImage) return;
+
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const recordIndex = records.findIndex(r => r.id === id);
+            
+            if (recordIndex === -1) {
+                showToast('记录未找到', 'error');
+                return;
+            }
+
+            records[recordIndex].image = pendingCoverImage;
+            saveDiaryRecords(records);
+            
+            // Update the displayed image
+            document.getElementById('heroImage').src = pendingCoverImage;
+            
+            // Close modal
+            document.getElementById('coverPreviewModal').classList.remove('active');
+            pendingCoverImage = null;
+            
+            showToast('封面图片更换成功！', 'success');
+        }
+
+        function cancelCoverChange() {
+            document.getElementById('coverPreviewModal').classList.remove('active');
+            pendingCoverImage = null;
+        }
+
+        // Gallery Management
+        function loadGallery() {
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const record = records.find(r => r.id === id);
+            
+            if (record && record.photos && record.photos.length > 0) {
+                renderGallery(record.photos);
+            } else {
+                document.getElementById('galleryGrid').innerHTML = '<div class="gallery-item gallery-item-placeholder">📷</div>';
+            }
+        }
+
+        function renderGallery(photos) {
+            const galleryGrid = document.getElementById('galleryGrid');
+            if (photos.length === 0) {
+                galleryGrid.innerHTML = '<div class="gallery-item gallery-item-placeholder">📷</div>';
+                return;
+            }
+
+            galleryGrid.innerHTML = photos.map((photo, index) => `
+                <div class="gallery-item" data-index="${index}">
+                    <img src="${photo}" alt="探访照片 ${index + 1}">
+                    <div class="gallery-item-actions">
+                        <button class="btn-move-up" onclick="movePhotoUp(${index})" ${index === 0 ? 'style="opacity: 0.5; cursor: not-allowed;"' : ''}>↑</button>
+                        <button class="btn-move-down" onclick="movePhotoDown(${index})" ${index === photos.length - 1 ? 'style="opacity: 0.5; cursor: not-allowed;"' : ''}>↓</button>
+                        <button class="btn-remove-image" onclick="removePhoto(${index})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addImages() {
+            document.getElementById('imageUpload').click();
+        }
+
+        function handleImageUpload(e) {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const recordIndex = records.findIndex(r => r.id === id);
+            
+            if (recordIndex === -1) {
+                showToast('记录未找到', 'error');
+                return;
+            }
+
+            const record = records[recordIndex];
+            if (!record.photos) record.photos = [];
+
+            let uploadedCount = 0;
+            const totalFiles = files.length;
+
+            Array.from(files).forEach(file => {
+                const validation = validateImage(file);
+                if (!validation.valid) {
+                    showToast(validation.message, 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    record.photos.push(e.target.result);
+                    uploadedCount++;
+
+                    if (uploadedCount === totalFiles) {
+                        saveDiaryRecords(records);
+                        renderGallery(record.photos);
+                        showToast(`成功上传 ${uploadedCount} 张图片`, 'success');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function validateImage(file) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!validTypes.includes(file.type)) {
+                return { valid: false, message: '请上传JPG、PNG或WebP格式的图片' };
+            }
+
+            if (file.size > maxSize) {
+                return { valid: false, message: '图片大小不能超过5MB' };
+            }
+
+            return { valid: true, message: '' };
+        }
+
+        function movePhotoUp(index) {
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const record = records.find(r => r.id === id);
+            
+            if (!record || !record.photos || index <= 0) return;
+
+            const temp = record.photos[index];
+            record.photos[index] = record.photos[index - 1];
+            record.photos[index - 1] = temp;
+            
+            saveDiaryRecords(records);
+            renderGallery(record.photos);
+            showToast('图片已上移', 'info');
+        }
+
+        function movePhotoDown(index) {
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const record = records.find(r => r.id === id);
+            
+            if (!record || !record.photos || index >= record.photos.length - 1) return;
+
+            const temp = record.photos[index];
+            record.photos[index] = record.photos[index + 1];
+            record.photos[index + 1] = temp;
+            
+            saveDiaryRecords(records);
+            renderGallery(record.photos);
+            showToast('图片已下移', 'info');
+        }
+
+        function removePhoto(index) {
+            if (!confirm('确定要删除这张图片吗？')) return;
+
+            const id = parseInt(getUrlParam('id'));
+            const records = getDiaryRecords();
+            const record = records.find(r => r.id === id);
+            
+            if (!record || !record.photos) return;
+
+            record.photos.splice(index, 1);
+            saveDiaryRecords(records);
+            renderGallery(record.photos);
+            showToast('图片已删除', 'success');
+        }
+
+        // Preview Mode
+        function previewMode() {
+            const isManager = localStorage.getItem('wanning_manager_active') === 'true';
+            if (!isManager) {
+                showToast('请先登录管理者模式', 'error');
+                return;
+            }
+            
+            document.getElementById('managerHeader').style.display = 'none';
+            showToast('预览模式 - 按 ESC 退出', 'info');
+            
+            document.addEventListener('keydown', function escapeHandler(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('managerHeader').style.display = 'flex';
+                    document.removeEventListener('keydown', escapeHandler);
+                    showToast('已退出预览模式', 'info');
+                }
+            });
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        function handleKeydown(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+                e.preventDefault();
+                if (localStorage.getItem('wanning_manager_active') !== 'true') {
+                    openLoginModal();
+                }
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 's' && isEditMode) {
+                e.preventDefault();
+                saveChanges();
+            }
+
+            if (e.key === 'Escape') {
+                if (document.getElementById('loginModal').classList.contains('active')) {
+                    closeLoginModal();
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners
+            document.getElementById('loginBtn').addEventListener('click', openLoginModal);
+            document.getElementById('loginBtnModal').addEventListener('click', login);
+            document.getElementById('editModeBtn').addEventListener('click', toggleEditMode);
+            document.getElementById('saveBtn').addEventListener('click', saveChanges);
+            document.getElementById('previewBtn').addEventListener('click', previewMode);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('addImageBtn').addEventListener('click', addImages);
+            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+            
+            // Cover image upload listeners
+            document.getElementById('coverUploadBtn').addEventListener('click', openCoverUpload);
+            document.getElementById('coverImageInput').addEventListener('change', handleCoverUpload);
+            document.getElementById('coverConfirmBtn').addEventListener('click', confirmCoverChange);
+            document.getElementById('coverCancelBtn').addEventListener('click', cancelCoverChange);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeydown);
+
+            // Load data on page load
+            loadDetail();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>风物档案详情 - 万宁文旅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A90B8;
+            --secondary-color: #7EC8E3;
+            --bg-color: #F5FAFC;
+            --text-dark: #2C5F7C;
+            --text-light: #5A8FA5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Manager Header */
+        .manager-header {
+            display: none;
+            background: linear-gradient(135deg, #2C5F7C, #4A90B8);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .manager-header.active {
+            display: flex;
+        }
+
+        .manager-header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .manager-header span {
+            color: white;
+            font-weight: 500;
+        }
+
+        .manager-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .manager-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit-mode {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-edit-mode:hover {
+            background: #e6892e;
+        }
+
+        .btn-save {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #2ecc71;
+        }
+
+        .btn-preview {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .btn-preview:hover {
+            background: #8e44ad;
+        }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-content input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-login:hover {
+            background: #085c5a;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .login-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .login-btn:hover {
+            background: #e6892e;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Hero Section */
+        .detail-hero {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .hero-upload-area {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .detail-hero:hover .hero-upload-area {
+            opacity: 1;
+        }
+
+        .detail-hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .detail-hero-icon {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .detail-hero-content {
+            padding: 2.5rem;
+        }
+
+        .detail-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .info-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card .label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-card .value {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Description Section */
+        .description-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .description-section h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .description-text {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-dark);
+            text-align: justify;
+        }
+
+        /* Related Content Section */
+        .related-section {
+            background: linear-gradient(135deg, rgba(74, 144, 184, 0.1), rgba(126, 200, 227, 0.1));
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 2px solid rgba(74, 144, 184, 0.2);
+        }
+
+        .related-section h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .related-section h2::before {
+            content: '🔗';
+            font-size: 1.3rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .related-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .related-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .related-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(74, 144, 184, 0.25);
+        }
+
+        .related-card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .related-card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .related-card-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Page Transition */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            z-index: 9999;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .detail-hero-image,
+            .detail-hero-icon {
+                height: 250px;
+            }
+
+            .detail-hero-icon {
+                font-size: 5rem;
+            }
+
+            .detail-name {
+                font-size: 1.6rem;
+            }
+
+            .content-section,
+            .description-section,
+            .related-section {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .manager-actions {
+                flex-wrap: wrap;
+            }
+
+            .manager-actions button {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .toast {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Manager Header -->
+    <div class="manager-header" id="managerHeader">
+        <div class="manager-header-content">
+            <span>🔧 风物档案 - 管理者模式</span>
+            <div class="manager-actions">
+                <button class="btn-edit-mode" id="editModeBtn">✏️ 编辑模式</button>
+                <button class="btn-save" id="saveBtn" style="display: none;">💾 保存更改</button>
+                <button class="btn-preview" id="previewBtn">👁️ 预览</button>
+                <button class="btn-logout" id="logoutBtn">🚪 退出</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <h3>🔐 管理者登录</h3>
+            <input type="password" id="accessCode" placeholder="请输入访问码">
+            <button class="btn-login" id="loginBtnModal">登录</button>
+            <div class="error" id="loginError">访问码错误，请重试</div>
+        </div>
+    </div>
+
+    <!-- Login Button -->
+    <button class="login-btn" id="loginBtn">🔑 管理者登录</button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html#products" class="back-btn">← 返回风物档案</a>
+            <h1 class="header-title">万宁文旅</h1>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading">加载中...</div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent" style="display: none;">
+        <!-- Hero Section -->
+        <section class="detail-hero fade-in">
+            <div id="heroContainer">
+                <!-- Will be populated dynamically -->
+            </div>
+            <div class="hero-upload-area" id="heroUploadBtn" style="display: none;">
+                <input type="file" id="heroImageUpload" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <span>📷 更换图片</span>
+            </div>
+            <div class="detail-hero-content">
+                <h1 class="detail-name" id="detailName"></h1>
+            </div>
+        </section>
+
+        <!-- Basic Info Section -->
+        <section class="content-section fade-in">
+            <h2>📋 基本信息</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">💰</div>
+                    <div class="label">参考价格</div>
+                    <div class="value" id="infoPrice"></div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">📍</div>
+                    <div class="label">推荐地点</div>
+                    <div class="value" id="infoLocation"></div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">⭐</div>
+                    <div class="label">特色标签</div>
+                    <div class="value" id="infoTags"></div>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🍽️</div>
+                    <div class="label">类型</div>
+                    <div class="value" id="infoType"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Description Section -->
+        <section class="description-section fade-in">
+            <h2>📝 详细介绍</h2>
+            <p class="description-text" id="detailDescription"></p>
+        </section>
+
+        <!-- Related Content Section -->
+        <section class="related-section fade-in">
+            <h2>探索更多</h2>
+            <div class="related-grid">
+                <div class="related-card" onclick="navigateTo('index.html#diary')">
+                    <span class="related-card-icon">📝</span>
+                    <h3 class="related-card-title">探访实录</h3>
+                    <p class="related-card-desc">查看旅途中的探访记录与见闻</p>
+                </div>
+                <div class="related-card" onclick="navigateTo('index.html#culture')">
+                    <span class="related-card-icon">🏛️</span>
+                    <h3 class="related-card-title">文化解码</h3>
+                    <p class="related-card-desc">深入了解万宁历史文化</p>
+                </div>
+                <div class="related-card" onclick="navigateTo('index.html#map-section')">
+                    <span class="related-card-icon">🗺️</span>
+                    <h3 class="related-card-title">互动地图</h3>
+                    <p class="related-card-desc">探索万宁旅游景点</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Constants
+        const ACCESS_CODE = 'wanning2025';
+        const PRODUCTS_KEY = 'wanning_products';
+        const ACTION_LOG_KEY = 'wanning_action_logs';
+        const DESCRIPTION_KEY = 'wanning_product_descriptions';
+        
+        let currentProductId = null;
+        let isEditMode = false;
+
+        // Get URL parameter
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get products from localStorage
+        function getProducts() {
+            const products = localStorage.getItem(PRODUCTS_KEY);
+            return products ? JSON.parse(products) : getDefaultProducts();
+        }
+
+        function saveProducts(products) {
+            localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+        }
+
+        function getDefaultProducts() {
+            return [
+                { id: 1, name: '后安粉', price: '约15-25元/碗', location: '推荐：后安镇正宗后安粉店', image: '', tags: ['传统美食', '早餐'], type: '美食' },
+                { id: 2, name: '东山羊', price: '约80-120元/斤', location: '推荐：东山岭景区周边餐馆', image: '', tags: ['特色名菜', '羊肉'], type: '美食' },
+                { id: 3, name: '和乐蟹', price: '时价', location: '推荐：和乐镇海鲜市场', image: '', tags: ['海鲜', '四大名菜'], type: '美食' },
+                { id: 4, name: '兴隆咖啡', price: '约60-120元/袋', location: '推荐：兴隆华侨农场咖啡厂', image: '', tags: ['特产', '饮品'], type: '饮品' },
+                { id: 5, name: '万宁菠萝', price: '约5-10元/个', location: '推荐：各大农贸市场', image: '', tags: ['水果', '特产'], type: '水果' },
+                { id: 6, name: '兴隆胡椒', price: '约80-150元/斤', location: '推荐：兴隆华侨农场', image: '', tags: ['调味品', '特产'], type: '特产' }
+            ];
+        }
+
+        // Get product descriptions
+        function getProductDescriptions() {
+            const descriptions = localStorage.getItem(DESCRIPTION_KEY);
+            return descriptions ? JSON.parse(descriptions) : getDefaultDescriptions();
+        }
+
+        function saveProductDescriptions(descriptions) {
+            localStorage.setItem(DESCRIPTION_KEY, JSON.stringify(descriptions));
+        }
+
+        function getDefaultDescriptions() {
+            return {
+                '后安粉': '后安粉是万宁市后安镇的传统特色美食，有着百年历史。选用优质大米磨成粉，配以新鲜的猪骨、虾仁、鱿鱼等熬制的高汤，口感爽滑细腻，味道鲜美。后安粉不仅是当地人的早餐首选，也是游客必尝的特色小吃。',
+                '东山羊': '东山羊是海南四大名菜之一，因产自万宁东山岭而得名。东山羊毛色乌黑发亮，肉质鲜嫩多汁，没有膻味。最经典的做法是白切，蘸上特制的酱料，口感清香，回味无穷。',
+                '和乐蟹': '和乐蟹是海南四大名菜之一，产自万宁和乐镇。和乐蟹膏满肉肥，味道鲜美，尤其是蟹膏呈金黄色，口感细腻，是不可多得的海鲜珍品。清蒸和乐蟹是最能体现其原味的做法。',
+                '兴隆咖啡': '兴隆咖啡产自万宁兴隆华侨农场，这里的咖啡种植历史悠久。兴隆咖啡香气浓郁，口感醇厚，带有独特的焦糖风味。来到万宁，一定要品尝一杯正宗的兴隆咖啡。',
+                '万宁菠萝': '万宁菠萝以其香甜多汁而闻名，果肉金黄，口感细腻。万宁的气候条件非常适合菠萝生长，产出的菠萝甜度高，酸度适中，是夏日解暑的佳品。',
+                '兴隆胡椒': '兴隆胡椒是万宁的特色农产品，颗粒饱满，香气浓郁。兴隆华侨农场是海南重要的胡椒种植基地，这里出产的白胡椒和黑胡椒都备受青睐，是烹饪中不可或缺的调味品。'
+            };
+        }
+
+        function getProductDescription(name) {
+            const descriptions = getProductDescriptions();
+            return descriptions[name] || `欢迎了解${name}！这是万宁的特色风物之一。`;
+        }
+
+        // Action Log Functions
+        function addActionLog(action, detail) {
+            const logs = getActionLogs();
+            const newLog = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString('zh-CN'),
+                action,
+                detail,
+                productId: currentProductId,
+                productName: getCurrentProductName()
+            };
+            logs.unshift(newLog);
+            // Keep only last 100 logs
+            if (logs.length > 100) {
+                logs.pop();
+            }
+            localStorage.setItem(ACTION_LOG_KEY, JSON.stringify(logs));
+        }
+
+        function getActionLogs() {
+            const logs = localStorage.getItem(ACTION_LOG_KEY);
+            return logs ? JSON.parse(logs) : [];
+        }
+
+        function getCurrentProductName() {
+            const id = parseInt(getUrlParam('id'));
+            const products = getProducts();
+            const product = products.find(p => p.id === id);
+            return product ? product.name : '未知';
+        }
+
+        // Load detail data
+        function loadDetail() {
+            const id = parseInt(getUrlParam('id'));
+            currentProductId = id;
+            const products = getProducts();
+            const product = products.find(p => p.id === id);
+
+            if (!product) {
+                document.getElementById('loading').textContent = '内容未找到';
+                return;
+            }
+
+            // Hide loading, show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+
+            // Set hero content
+            const heroContainer = document.getElementById('heroContainer');
+            if (product.image) {
+                heroContainer.innerHTML = `<img src="${product.image}" alt="${product.name}" class="detail-hero-image">`;
+            } else {
+                heroContainer.innerHTML = `<div class="detail-hero-icon">🍽️</div>`;
+            }
+
+            // Set name
+            document.getElementById('detailName').textContent = product.name;
+
+            // Set basic info
+            document.getElementById('infoPrice').textContent = product.price;
+            document.getElementById('infoLocation').textContent = product.location;
+            document.getElementById('infoTags').textContent = product.tags ? product.tags.join(' · ') : '暂无标签';
+            document.getElementById('infoType').textContent = product.type || '其他';
+
+            // Set description
+            document.getElementById('detailDescription').textContent = getProductDescription(product.name);
+
+            // Show manager elements if active
+            if (localStorage.getItem('wanning_manager_active') === 'true') {
+                activateManagerMode();
+            }
+        }
+
+        // Login Functions
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('accessCode').value = '';
+            document.getElementById('loginError').classList.remove('active');
+        }
+
+        function login() {
+            const code = document.getElementById('accessCode').value.trim();
+            if (code === ACCESS_CODE) {
+                localStorage.setItem('wanning_manager_active', 'true');
+                closeLoginModal();
+                activateManagerMode();
+                addActionLog('登录', '管理者登录成功');
+                showToast('登录成功！管理者模式已激活', 'success');
+            } else {
+                document.getElementById('loginError').classList.add('active');
+            }
+        }
+
+        function logout() {
+            localStorage.setItem('wanning_manager_active', 'false');
+            isEditMode = false;
+            document.getElementById('managerHeader').classList.remove('active');
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('heroUploadBtn').style.display = 'none';
+            exitEditMode();
+            addActionLog('登出', '管理者登出');
+            showToast('已退出管理者模式', 'info');
+        }
+
+        function activateManagerMode() {
+            document.getElementById('managerHeader').classList.add('active');
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('heroUploadBtn').style.display = 'block';
+        }
+
+        // Edit Mode Functions
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            if (isEditMode) {
+                enterEditMode();
+                document.getElementById('editModeBtn').textContent = '✅ 编辑模式';
+            } else {
+                exitEditMode();
+                document.getElementById('editModeBtn').textContent = '✏️ 编辑模式';
+            }
+        }
+
+        function enterEditMode() {
+            // Make fields editable
+            document.getElementById('detailName').contentEditable = 'true';
+            document.getElementById('infoPrice').contentEditable = 'true';
+            document.getElementById('infoLocation').contentEditable = 'true';
+            document.getElementById('infoTags').contentEditable = 'true';
+            document.getElementById('infoType').contentEditable = 'true';
+            document.getElementById('detailDescription').contentEditable = 'true';
+            
+            // Add edit styling
+            const editableElements = document.querySelectorAll('[contenteditable="true"]');
+            editableElements.forEach(el => {
+                el.style.border = '2px dashed var(--secondary-color)';
+                el.style.padding = '4px 8px';
+                el.style.borderRadius = '6px';
+                el.style.background = 'rgba(74, 144, 184, 0.05)';
+            });
+
+            // Show save button
+            document.getElementById('saveBtn').style.display = 'inline-flex';
+            showToast('已进入编辑模式，点击内容即可修改', 'info');
+        }
+
+        function exitEditMode() {
+            // Make fields non-editable
+            document.getElementById('detailName').contentEditable = 'false';
+            document.getElementById('infoPrice').contentEditable = 'false';
+            document.getElementById('infoLocation').contentEditable = 'false';
+            document.getElementById('infoTags').contentEditable = 'false';
+            document.getElementById('infoType').contentEditable = 'false';
+            document.getElementById('detailDescription').contentEditable = 'false';
+            
+            // Remove edit styling
+            const editableElements = document.querySelectorAll('[contenteditable="false"]');
+            editableElements.forEach(el => {
+                el.style.border = 'none';
+                el.style.padding = 'initial';
+                el.style.background = 'none';
+            });
+
+            // Hide save button
+            document.getElementById('saveBtn').style.display = 'none';
+        }
+
+        // Save Changes
+        function saveChanges() {
+            const id = parseInt(getUrlParam('id'));
+            const products = getProducts();
+            const descriptions = getProductDescriptions();
+            
+            const productIndex = products.findIndex(p => p.id === id);
+            if (productIndex === -1) {
+                showToast('产品未找到', 'error');
+                return;
+            }
+
+            const product = products[productIndex];
+            const oldName = product.name;
+            
+            // Update basic info
+            product.name = document.getElementById('detailName').textContent.trim();
+            product.price = document.getElementById('infoPrice').textContent.trim();
+            product.location = document.getElementById('infoLocation').textContent.trim();
+            product.tags = document.getElementById('infoTags').textContent.trim().split('·').map(t => t.trim()).filter(t => t);
+            product.type = document.getElementById('infoType').textContent.trim();
+            
+            // Update description
+            const newDescription = document.getElementById('detailDescription').textContent.trim();
+            if (oldName !== product.name) {
+                delete descriptions[oldName];
+            }
+            descriptions[product.name] = newDescription;
+
+            // Save
+            saveProducts(products);
+            saveProductDescriptions(descriptions);
+            
+            // Log action
+            addActionLog('修改内容', `产品名称: ${oldName} -> ${product.name}`);
+            
+            // Exit edit mode
+            toggleEditMode();
+            showToast('保存成功！', 'success');
+        }
+
+        // Image Upload
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const validation = validateImage(file);
+            if (!validation.valid) {
+                showToast(validation.message, 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const id = parseInt(getUrlParam('id'));
+                const products = getProducts();
+                const product = products.find(p => p.id === id);
+                
+                if (product) {
+                    product.image = e.target.result;
+                    saveProducts(products);
+                    
+                    // Update UI
+                    document.getElementById('heroContainer').innerHTML = `<img src="${e.target.result}" alt="${product.name}" class="detail-hero-image">`;
+                    
+                    // Log action
+                    addActionLog('上传图片', `产品: ${product.name}`);
+                    showToast('图片上传成功！', 'success');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function validateImage(file) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!validTypes.includes(file.type)) {
+                return { valid: false, message: '请上传JPG、PNG或WebP格式的图片' };
+            }
+
+            if (file.size > maxSize) {
+                return { valid: false, message: '图片大小不能超过5MB' };
+            }
+
+            return { valid: true, message: '' };
+        }
+
+        // Preview Mode
+        function previewMode() {
+            const isManager = localStorage.getItem('wanning_manager_active') === 'true';
+            if (!isManager) {
+                showToast('请先登录管理者模式', 'error');
+                return;
+            }
+            
+            // Hide manager header temporarily
+            document.getElementById('managerHeader').style.display = 'none';
+            
+            showToast('预览模式 - 按 ESC 退出', 'info');
+            
+            document.addEventListener('keydown', function escapeHandler(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('managerHeader').style.display = 'flex';
+                    document.removeEventListener('keydown', escapeHandler);
+                    showToast('已退出预览模式', 'info');
+                }
+            });
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Navigation function
+        function navigateTo(url) {
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
+        }
+
+        // Keyboard shortcuts
+        function handleKeydown(e) {
+            // Ctrl/Cmd + M for login modal
+            if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+                e.preventDefault();
+                if (localStorage.getItem('wanning_manager_active') !== 'true') {
+                    openLoginModal();
+                }
+            }
+            
+            // Ctrl/Cmd + S for save
+            if ((e.ctrlKey || e.metaKey) && e.key === 's' && isEditMode) {
+                e.preventDefault();
+                saveChanges();
+            }
+
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                if (document.getElementById('loginModal').classList.contains('active')) {
+                    closeLoginModal();
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners
+            document.getElementById('loginBtn').addEventListener('click', openLoginModal);
+            document.getElementById('loginBtnModal').addEventListener('click', login);
+            document.getElementById('editModeBtn').addEventListener('click', toggleEditMode);
+            document.getElementById('saveBtn').addEventListener('click', saveChanges);
+            document.getElementById('previewBtn').addEventListener('click', previewMode);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('heroImageUpload').addEventListener('change', handleImageUpload);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeydown);
+
+            // Load detail on page load
+            loadDetail();
+        });
+    </script>
+</body>
+</html>
